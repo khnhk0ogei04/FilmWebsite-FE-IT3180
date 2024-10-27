@@ -1,0 +1,12 @@
+.active-link {
+    color: orange;
+    font-weight: bold;
+}
+
+.inactive-link {
+    color: blue;
+}
+
+.MuiDivider-root {
+    margin: 0 10px;
+}

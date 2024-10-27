@@ -1,0 +1,46 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #cf1627;
+    background-image: url("https://fami.hust.edu.vn/sohoa/assets/bg-footer-c65d9a8d.png");
+    font-family: Arial, sans-serif;
+}
+
+.footer-section {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.footer-title {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 24px;
+    padding-bottom: 20px;
+}
+
+.footer-divider {
+    width: 230px;
+    margin: 0 auto;
+    border: 0;
+    color: #ffffff;
+    height: 1px;
+}
+
+.footer-subtitle {
+    font-size: 20px;
+    margin-top: 10px;
+    color: #ffffff;
+}
+
+.footer-text {
+    font-size: 16px;
+    margin-top: 5px;
+    color: #ffffff;
+}
+
+.footer2 {
+    font-size: 16px;
+    color: #ffffff;
+}
