@@ -94,15 +94,8 @@ export const BookingPage = () => {
     if (!scheduleDetails) {
         return <Typography variant="h5" align="center">Loading...</Typography>;
     }
-
-    console.log(scheduleDetails);
     return (
-        <Box sx={{ p: 4 }}>
-            <Typography variant="h4" gutterBottom>Đặt vé - {scheduleDetails.movieName}</Typography>
-            <Typography variant="h6">Rạp: {scheduleDetails.schedule.cinemaName}</Typography>
-            <Typography variant="h6">Suất chiếu: {scheduleDetails.schedule.shiftName} ({scheduleDetails.schedule.shiftStart} - {scheduleDetails.schedule.shiftEnd})</Typography>
-            <Typography variant="h6">Ngày chiếu: {scheduleDetails.schedule.scheduleDate}</Typography>
-
+        <>
             {/* bản đồ ghế map */}
             <Box sx={{ mt: 4 }}>
                 <Typography variant="h5" gutterBottom>Sơ đồ ghế</Typography>
@@ -121,6 +114,25 @@ export const BookingPage = () => {
                     ))}
                 </Grid>
             </Box>
-        </Box>
-    );
+        </>
+    )
+        //     {/* bản đồ ghế map */}
+        //     <Box sx={{ mt: 4 }}>
+        //         <Typography variant="h5" gutterBottom>Sơ đồ ghế</Typography>
+        //         <Grid container spacing={2}>
+        //             {seats.map((seat) => (
+        //                 <Grid item xs={2} key={seat.id}>
+        //                     <Button
+        //                         variant="contained"
+        //                         color={bookedSeats.includes(seat.id) ? "secondary" : "primary"}
+        //                         onClick={() => handleSeatClick(seat.id, seat.seatType)}
+        //                         disabled={bookedSeats.includes(seat.id)}
+        //                     >
+        //                         {seat.seatRow}{seat.seatNumber} ({seat.seatType})
+        //                     </Button>
+        //                 </Grid>
+        //             ))}
+        //         </Grid>
+        //     </Box>
+        // </Box>
 };

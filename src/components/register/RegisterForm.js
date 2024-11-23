@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Box, Grid, FormLabel, InputLabel } from '@mui/material';
+import { TextField, Button, Typography, Box, Grid, InputLabel } from '@mui/material';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './RegisterForm.css';
+import FooterComponent1 from '../footer1/FooterComponent1';
 
 export const RegisterComponent = () => {
 
     const [selectedImage, setSelectedImage] = useState(null); 
     const [imagePreview, setImagePreview] = useState('');
 
-    const [user,setUser] = useState({
+    const [user, setUser] = useState({
         username: '',
         fullname: '',
         avatar: '',
@@ -23,7 +23,7 @@ export const RegisterComponent = () => {
     const EMAIL_REGEX = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z]{2,6}$/;
 
     const handleChange = (event) => {
-        const {name, value} = event.target;
+        const { name, value } = event.target;
         setUser({
             ...user,
             [name]: value
@@ -34,12 +34,12 @@ export const RegisterComponent = () => {
         const file = event.target.files[0]; 
         setSelectedImage(file);
         setImagePreview(URL.createObjectURL(file));
-    }
+    };
 
-    const handleSubmit = async(event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!EMAIL_REGEX.test(user.email)){
+        if (!EMAIL_REGEX.test(user.email)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid format email, try again...',
@@ -71,7 +71,8 @@ export const RegisterComponent = () => {
                 });
               }
         }
-    }
+    };
+
     return (
         <>
             <Box className="register-box" sx={{ padding: '40px', backgroundColor: '#f9f9f9', borderRadius: '8px', maxWidth: '600px', marginTop: '80px', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -118,7 +119,7 @@ export const RegisterComponent = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <InputLabel sx={{mb: 2, fontWeight: 'bold'}}>Upload Image</InputLabel>
+                            <InputLabel sx={{ mb: 2, fontWeight: 'bold' }}>Upload Image</InputLabel>
                             <Button variant="contained" component="label">
                                 Upload Image
                                 <input type="file" hidden onChange={handleImageChange} />
@@ -176,6 +177,9 @@ export const RegisterComponent = () => {
                     </Box>
                 </form>
             </Box>
+            <Box sx={{ marginTop: '50px' }}>
+                <FooterComponent1 />
+            </Box>
         </>
-    )
-}
+    );
+};

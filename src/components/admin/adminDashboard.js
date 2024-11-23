@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Table, TableCell, TableRow, TableContainer, TableHead, Switch, FormControlLabel, TableBody, Pagination } from '@mui/material';
+import { Button, Table, TableCell, TableRow, TableContainer, TableHead, Switch, FormControlLabel, TableBody, Pagination, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export const AdminDashboard = () => {
@@ -46,24 +46,24 @@ export const AdminDashboard = () => {
 
     const handleToggle = (event) => {
         setShowActive(event.target.checked);
-    }
+    };
 
-    const handleAddNewMovie = (event) => {
+    const handleAddNewMovie = () => {
         navigate(`/admin/movies/add`);
-    }
+    };
 
     const handleEditMovie = (movieId) => {
         navigate(`/admin/movies/${movieId}`); 
-    }
+    };
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
-    }
-    console.log(movies);
+    };
+
     return (
         <>
             <h1 className='text-center'>Film List</h1>
-            <div className="dashboard-header">
+            <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <FormControlLabel
                     control={<Switch checked={showActive} onChange={handleToggle} />}
                     label={showActive ? 'Phim đang hoạt động' : 'Dừng hoạt động'}
@@ -111,15 +111,16 @@ export const AdminDashboard = () => {
                 </Table>
             </TableContainer>
 
-            <div className="pagination-container">
-                {/* <Pagination 
+            <Box display="flex" justifyContent="center" mt={4}>
+                <Pagination 
                     count={totalPages} 
                     page={currentPage} 
                     onChange={handlePageChange} 
                     color="primary" 
-                /> */}
-                <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} color="primary" variant="outlined" shape="rounded" />
-            </div>
+                    variant="outlined" 
+                    shape="rounded" 
+                />
+            </Box>
         </>
     );
-}
+};

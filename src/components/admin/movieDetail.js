@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, TextField, Typography, Box, Grid, FormControlLabel, Switch } from '@mui/material';
+import { Button, Typography, Box, Grid, FormControlLabel, Switch, TextField } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
+import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill';
 
 export const MovieDetail = () => {
     const navigate = useNavigate();
@@ -31,8 +33,8 @@ export const MovieDetail = () => {
             try {
                 const response = await axios.get(`http://localhost:8080/api/movies/${movieId}`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
                 setMovie(response.data);
             } catch (error) {
@@ -52,10 +54,17 @@ export const MovieDetail = () => {
         }));
     };
 
+    const handleDescriptionChange = (value) => {
+        setMovie((prevMovie) => ({
+            ...prevMovie,
+            description: value,
+        }));
+    };
+
     const handleStatusToggle = (event) => {
         setMovie((prevMovie) => ({
             ...prevMovie,
-            status: event.target.checked ? 1 : 0
+            status: event.target.checked ? 1 : 0,
         }));
     };
 
@@ -63,8 +72,8 @@ export const MovieDetail = () => {
         try {
             await axios.put(`http://localhost:8080/api/movies/${movieId}`, movie, {
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             });
             navigate('/admin');
         } catch (error) {
@@ -84,16 +93,34 @@ export const MovieDetail = () => {
             </Typography>
             <Grid container spacing={4} sx={{ mb: 4 }}>
                 <Grid item xs={12} md={6}>
-                    <Typography variant="h6" gutterBottom>Movie Image</Typography>
+                    <Typography variant="h6" gutterBottom>
+                        Movie Image
+                    </Typography>
                     <img
                         src={movie.image}
                         alt={movie.movieName}
-                        style={{ width: '100%', height: 'auto', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+                        style={{
+                            width: '100%',
+                            height: 'auto',
+                            borderRadius: '10px',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                        }}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Typography variant="h6" gutterBottom>Trailer</Typography>
-                    <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%', background: '#000' }}>
+                    <Typography variant="h6" gutterBottom>
+                        Trailer
+                    </Typography>
+                    <div
+                        style={{
+                            position: 'relative',
+                            paddingBottom: '56.25%',
+                            height: 0,
+                            overflow: 'hidden',
+                            maxWidth: '100%',
+                            background: '#000',
+                        }}
+                    >
                         <iframe
                             src={movie.trailerUrl}
                             title="Movie Trailer"
@@ -112,15 +139,14 @@ export const MovieDetail = () => {
                 fullWidth
                 margin="normal"
             />
-            <TextField
-                label="Description"
-                name="description"
+            <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>
+                Description
+            </Typography>
+            <ReactQuill
+                theme="snow"
                 value={movie.description}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                multiline
-                rows={4}
+                onChange={handleDescriptionChange}
+                style={{ height: '200px', marginBottom: '60px' }}
             />
             <TextField
                 label="Directors"
