@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 export const UserEdit = () => {
 
     const {id} = useParams();
+    const token = localStorage.getItem('token');
     const [user, setUser] = useState({
         fullName: '',
         email: '',
@@ -43,7 +44,11 @@ export const UserEdit = () => {
 
     const handleSave = (event) => {
         event.preventDefault();
-        axios.put(`http://localhost:8080/api/users/${id}`, user)
+        axios.put(`http://localhost:8080/api/users/${id}`, user, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then((response) => {
                 Swal.fire({
                     icon: 'success',

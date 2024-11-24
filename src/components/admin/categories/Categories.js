@@ -77,7 +77,7 @@ export const CategoriesList = () => {
             <Box display="flex" justifyContent="flex-end" sx={{ mb: 3 }}>
                 <Button
                     variant="contained"
-                    color="success"
+                    color="info"
                     onClick={handleAddNewCategory}
                 >
                     Add New Category

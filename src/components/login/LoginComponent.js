@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TextField, Button, Typography, Link, Box, Grid, Container, Paper } from '@mui/material';
-import FooterComponent1 from '../footer1/FooterComponent1';
+import { FooterComponent1 } from '../footer1/FooterComponent1';
 
 export const LoginComponent = () => {
   const [username, setUsername] = useState('');

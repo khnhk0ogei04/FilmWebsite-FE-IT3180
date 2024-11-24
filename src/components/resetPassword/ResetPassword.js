@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Typography, TextField, Button, Box, Paper, Container } from '@mui/material';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import FooterComponent1 from '../footer1/FooterComponent1';
+import { FooterComponent1 } from '../footer1/FooterComponent1';
 
 export const ResetPassword = () => {
 

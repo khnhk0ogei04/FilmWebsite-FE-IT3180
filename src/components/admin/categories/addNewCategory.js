@@ -61,6 +61,7 @@ export const AddNewCategory = () => {
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="Category Name"
+                    required
                     name="categoryName"
                     value={category.categoryName}
                     onChange={handleChange}
@@ -68,6 +69,7 @@ export const AddNewCategory = () => {
                     margin="normal"
                 />
                 <TextField
+                    label="Category Image"
                     type='file'
                     onChange={handleImageChange}
                     fullWidth

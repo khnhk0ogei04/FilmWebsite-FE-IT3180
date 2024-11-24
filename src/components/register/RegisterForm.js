@@ -3,7 +3,7 @@ import { TextField, Button, Typography, Box, Grid, InputLabel } from '@mui/mater
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import FooterComponent1 from '../footer1/FooterComponent1';
+import { FooterComponent1 } from '../footer1/FooterComponent1';
 
 export const RegisterComponent = () => {
 

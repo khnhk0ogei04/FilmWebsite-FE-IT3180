@@ -2,8 +2,8 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box } from '@mui/material';
 import NavBar from '../navbar/NavBar';
-import ResponsiveAppBar from '../header/Header';
-import { Footer } from '../footer/Footer';
+import ResponsiveAppBar from './header/Header';
+import { Footer } from './footer/Footer';
 
 const drawerWidth = 240; 
 

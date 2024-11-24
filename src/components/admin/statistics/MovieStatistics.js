@@ -1,20 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Grid, Pagination, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Grid,
+  Pagination,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  CardMedia,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export const MovieStatistics = () => {
   const [movies, setMovies] = useState([]);
-  const [sortCriteria, setSortCriteria] = useState('id'); 
+  const [sortCriteria, setSortCriteria] = useState('id');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   useEffect(() => {
-    fetchMovieStatistics(sortCriteria, page - 1); 
+    fetchMovieStatistics(sortCriteria, page - 1);
   }, [sortCriteria, page]);
 
   const fetchMovieStatistics = async (sort, currentPage) => {
@@ -23,12 +42,12 @@ export const MovieStatistics = () => {
         params: {
           sort: sort,
           page: currentPage,
-          size: itemsPerPage
-        }
+          size: itemsPerPage,
+        },
       });
-      setMovies(response.data.content); 
+      setMovies(response.data.content);
       setTotalPages(response.data.totalPages);
-      setLoading(false); 
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching:', error);
       setLoading(false);
@@ -37,7 +56,7 @@ export const MovieStatistics = () => {
 
   const handleSortChange = (event) => {
     setSortCriteria(event.target.value);
-    setPage(1); 
+    setPage(1);
   };
 
   const handlePageChange = (event, value) => {
@@ -45,29 +64,35 @@ export const MovieStatistics = () => {
   };
 
   const handleViewStatistics = (movieId) => {
+    Swal.fire({
+      icon: 'info',
+      title: 'Loading Statistics',
+      text: `Redirecting to detailed statistics for movie ID: ${movieId}`,
+      timer: 1500,
+      showConfirmButton: false,
+    });
     navigate(`/admin/statistics/${movieId}`);
   };
 
   if (loading) {
     return (
-        <>
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <img src='https://png.pngtree.com/png-clipart/20220719/original/pngtree-loading-icon-vector-transparent-png-image_8367371.png' 
-                    alt = "Loading"
-                    style={{width: '300px', height: '300px'}}
-                />
-            </div>    
-        </>
-    )
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '70vh' }}>
+        <img
+          src="https://png.pngtree.com/png-clipart/20220719/original/pngtree-loading-icon-vector-transparent-png-image_8367371.png"
+          alt="Loading"
+          style={{ width: '150px', height: '150px' }}
+        />
+      </Box>
+    );
   }
-  console.log(movies);
+
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
         Movie Statistics
       </Typography>
 
-      <Grid container justifyContent="flex-end" sx={{ mb: 2 }}>
+      <Grid container justifyContent="flex-end" sx={{ mb: 3 }}>
         <Grid item>
           <FormControl variant="outlined" size="small">
             <InputLabel id="sort-label">Sort By</InputLabel>
@@ -87,39 +112,57 @@ export const MovieStatistics = () => {
         </Grid>
       </Grid>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
         <Table aria-label="movie statistics table">
           <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Movie Name</TableCell>
-              <TableCell>Image</TableCell>
-              <TableCell>Average Rating</TableCell>
-              <TableCell>Tickets Sold</TableCell>
-              <TableCell>Revenue</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>View Statistics</TableCell>
+            <TableRow sx={{ backgroundColor: '#1976d2' }}>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>ID</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Movie Name</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Image</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Average Rating</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Tickets Sold</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Revenue</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Status</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {movies.map((movie) => (
-              <TableRow key={movie.movieId}>
-                <TableCell>{movie.movieId}</TableCell>
-                <TableCell>{movie.movieName}</TableCell>
-                <TableCell>
-                  <img src={movie.image} alt={movie.movieName} style={{ width: '100px', height: 'auto' }} />
+              <TableRow
+                key={movie.movieId}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5',
+                  },
+                }}
+              >
+                <TableCell sx={{ textAlign: 'center' }}>{movie.movieId}</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{movie.movieName}</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>
+                  <CardMedia
+                    component="img"
+                    image={movie.image}
+                    alt={movie.movieName}
+                    sx={{
+                      width: '120px',
+                      height: 'auto',
+                      objectFit: 'cover',
+                      borderRadius: '8px',
+                      margin: 'auto',
+                    }}
+                  />
                 </TableCell>
-                <TableCell>{movie.averageRating.toFixed(1)}</TableCell>
-                <TableCell>{movie.ticketsSold}</TableCell>
-                <TableCell>{movie.revenue.toFixed(0)}đ</TableCell> 
-                <TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{movie.averageRating.toFixed(1)}</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{movie.ticketsSold.toLocaleString()}</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{movie.revenue.toLocaleString()}đ</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>
                   {movie.status === 1 ? (
                     <Typography color="green">Active</Typography>
                   ) : (
                     <Typography color="red">Inactive</Typography>
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>
                   <Button variant="contained" color="primary" onClick={() => handleViewStatistics(movie.movieId)}>
                     View
                   </Button>
@@ -130,8 +173,15 @@ export const MovieStatistics = () => {
         </Table>
       </TableContainer>
 
-      <Grid container justifyContent="center" sx={{ mt: 2 }}>
-        <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
+      <Grid container justifyContent="center" sx={{ mt: 3 }}>
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+          variant="outlined"
+          shape="rounded"
+        />
       </Grid>
     </Box>
   );

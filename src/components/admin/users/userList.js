@@ -1,201 +1,66 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import { Modal, TextField, Box } from '@mui/material';
-// import Swal from 'sweetalert2';
-// import { Table, TableHead, TableRow, TableCell, TableBody, Button, TableContainer, Paper } from '@mui/material';
-// import { Link, useNavigate } from 'react-router-dom';
-
-// export const UserList = () => {
-//     const [users, setUsers] = useState([]);
-//     const [open, setOpen] = useState(false);
-//     const [amount, setAmount] = useState(0);
-//     const [selectedUserId, setSelectedUserId] = useState(null); 
-//     const [selectedUsername, setSelectedUsername] = useState(""); 
-
-//     const navigate = useNavigate();
-
-//     const handleOpen = (userId, username) => {
-//         setSelectedUserId(userId);
-//         setSelectedUsername(username); 
-//         setOpen(true);
-//     };
-//     const handleClose = () => {
-//         setOpen(false);
-//         setSelectedUserId(null); 
-//         setAmount(0); 
-//     };
-
-//     const handleSubmitBalance = () => {
-//         if (amount > 0) {
-//             axios.post(`http://localhost:8080/api/users/${selectedUserId}/add-balance?amount=${amount}`)
-//                 .then((response) => {
-//                     Swal.fire({
-//                         position: 'top',
-//                         icon: 'success',
-//                         title: 'Balance added successfully!',
-//                         showConfirmButton: false,
-//                         timer: 1500,
-//                     });
-//                     setOpen(false);
-//                 })
-//                 .catch((error) => {
-//                     console.error('Error adding balance:', error);
-//                     Swal.fire({
-//                         icon: 'error',
-//                         title: 'Oops...',
-//                         text: 'Something went wrong!',
-//                     });
-//                 });
-//                 window.location.reload()
-//         } else {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Invalid amount',
-//                 text: 'Please enter a valid amount!',
-//             });
-//         }
-//     };
-
-//     useEffect(() => {
-//         const fetchUsers = async () => {
-//             try {
-//                 const response = await axios.get('http://localhost:8080/api/users');
-//                 setUsers(response.data);
-//             } catch (error) {
-//                 console.error('Error fetching users:', error);
-//             }
-//         };
-
-//         fetchUsers();
-//     }, []);
-
-//     const handleEditUser = (userId) => {
-//         navigate(`/admin/users/edit/${userId}`);
-//     };
-
-//     return (
-//         <TableContainer component={Paper}>
-//             <Table>
-//                 <TableHead>
-//                     <TableRow>
-//                         <TableCell>ID</TableCell>
-//                         <TableCell>Username</TableCell>
-//                         <TableCell>Account Balance</TableCell>
-//                         <TableCell>Actions</TableCell>
-//                         <TableCell>Number of tickets</TableCell>
-//                     </TableRow>
-//                 </TableHead>
-//                 <TableBody>
-//                     {users.map((user) => (
-//                         <TableRow key={user.id}>
-//                             <TableCell>{user.id}</TableCell>
-//                             <TableCell>
-//                                 <Link to={`/admin/users/${user.id}`}>
-//                                     {user.username}
-//                                 </Link>
-//                             </TableCell>
-//                             <TableCell>{user.accountBalance}</TableCell>
-//                             <TableCell>
-//                                 <Button 
-//                                     variant="contained" 
-//                                     color="primary" 
-//                                     onClick={() => handleOpen(user.id, user.username)} // Truyền userId và username khi mở modal
-//                                 >
-//                                     Add Balance
-//                                 </Button>
-//                                 <Button 
-//                                     variant="contained" 
-//                                     color="secondary" 
-//                                     style={{ marginLeft: '10px' }}
-//                                     onClick={() => handleEditUser(user.id)}
-//                                 >
-//                                     Edit
-//                                 </Button>
-//                             </TableCell>
-//                             <TableCell>
-//                                 {user.orderCount}
-//                             </TableCell>
-//                         </TableRow>
-//                     ))}
-//                 </TableBody>
-//             </Table>
-
-//             <Modal open={open} onClose={handleClose}>
-//                 <Box sx={{ ...modalStyle }}>
-//                     <h2>Add Balance for {selectedUsername}</h2> {/* Hiển thị đúng username */}
-//                     <TextField
-//                         type="number"
-//                         label="Amount"
-//                         value={amount}
-//                         onChange={(e) => setAmount(e.target.value)}
-//                         fullWidth
-//                     />
-//                     <Button
-//                         variant="contained"
-//                         color="primary"
-//                         onClick={handleSubmitBalance}
-//                         sx={{ mt: 2 }}
-//                     >
-//                         Submit
-//                     </Button>
-//                     <Button
-//                         variant="outlined"
-//                         onClick={handleClose}
-//                         sx={{ mt: 2, ml: 2 }}
-//                     >
-//                         Cancel
-//                     </Button>
-//                 </Box>
-//             </Modal>
-//         </TableContainer>
-//     );
-// };
-
-// const modalStyle = {
-//     position: 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     transform: 'translate(-50%, -50%)',
-//     width: 400,
-//     bgcolor: 'background.paper',
-//     border: '2px solid #000',
-//     boxShadow: 24,
-//     p: 4,
-// };
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Modal, TextField, Box } from '@mui/material';
+import {
+    Modal,
+    TextField,
+    Box,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Button,
+    TableContainer,
+    Paper,
+    Pagination,
+    IconButton,
+    Typography,
+} from '@mui/material';
+import { AddCircle, Edit } from '@mui/icons-material';
 import Swal from 'sweetalert2';
-import { Table, TableHead, TableRow, TableCell, TableBody, Button, TableContainer, Paper, Pagination } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 
 export const UserList = () => {
     const [users, setUsers] = useState([]);
     const [open, setOpen] = useState(false);
     const [amount, setAmount] = useState(0);
-    const [selectedUserId, setSelectedUserId] = useState(null); 
-    const [selectedUsername, setSelectedUsername] = useState(""); 
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    const [selectedUsername, setSelectedUsername] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
+    const token = localStorage.getItem("token");
+
     const navigate = useNavigate();
 
-    const itemsPerPage = 5; // Number of users per page
+    const itemsPerPage = 5; 
 
     const handleOpen = (userId, username) => {
         setSelectedUserId(userId);
-        setSelectedUsername(username); 
+        setSelectedUsername(username);
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
-        setSelectedUserId(null); 
-        setAmount(0); 
+        setSelectedUserId(null);
+        setAmount(0);
+    };
+
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
     };
 
     const handleSubmitBalance = () => {
         if (amount > 0) {
-            axios.post(`http://localhost:8080/api/users/${selectedUserId}/add-balance?amount=${amount}`)
+            axios.post(
+                `http://localhost:8080/api/users/${selectedUserId}/add-balance?amount=${amount}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
                 .then((response) => {
                     Swal.fire({
                         position: 'center',
@@ -205,6 +70,7 @@ export const UserList = () => {
                         timer: 1500,
                     });
                     setOpen(false);
+                    window.location.reload();
                 })
                 .catch((error) => {
                     console.error('Error adding balance:', error);
@@ -214,10 +80,9 @@ export const UserList = () => {
                         title: 'Oops...',
                         text: 'Something went wrong!',
                         timer: 1500,
-                        showConfirmButton: false
+                        showConfirmButton: false,
                     });
                 });
-                window.location.reload()
         } else {
             Swal.fire({
                 icon: 'error',
@@ -225,7 +90,7 @@ export const UserList = () => {
                 text: 'Please enter a valid amount!',
                 position: 'center',
                 timer: 1500,
-                showConfirmButton: false
+                showConfirmButton: false,
             });
         }
     };
@@ -254,89 +119,85 @@ export const UserList = () => {
 
     return (
         <>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ mt: 3 }}>
                 <Table>
                     <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Username</TableCell>
-                            <TableCell>Account Balance</TableCell>
-                            <TableCell>Actions</TableCell>
-                            <TableCell>Number of tickets</TableCell>
+                        <TableRow sx={{
+                            backgroundColor: '#1976d2',
+                        }}>
+                            <TableCell sx={{color: 'white'}}><Typography variant="body">ID</Typography></TableCell>
+                            <TableCell sx={{color: 'white'}}><Typography variant="body">Username</Typography></TableCell>
+                            <TableCell sx={{color: 'white'}}><Typography variant="body">Account Balance</Typography></TableCell>
+                            <TableCell sx={{color: 'white'}}><Typography variant="body">Actions</Typography></TableCell>
+                            <TableCell sx={{color: 'white'}}><Typography variant="body">Number of Tickets</Typography></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {users.map((user) => (
-                            <TableRow key={user.id}>
+                            <TableRow key={user.id} hover>
                                 <TableCell>{user.id}</TableCell>
                                 <TableCell>
-                                    <Link to={`/admin/users/${user.id}`}>
+                                    <Link to={`/admin/users/${user.id}`} style={{ textDecoration: 'none', color: '#1976d2' }}>
                                         {user.username}
                                     </Link>
                                 </TableCell>
-                                <TableCell>{user.accountBalance}</TableCell>
+                                <TableCell>{formatCurrency(user.accountBalance)}</TableCell>
                                 <TableCell>
-                                    <Button 
-                                        variant="contained" 
-                                        color="primary" 
-                                        onClick={() => handleOpen(user.id, user.username)} 
+                                    <IconButton
+                                        color="primary"
+                                        onClick={() => handleOpen(user.id, user.username)}
                                     >
-                                        Add Balance
-                                    </Button>
-                                    <Button 
-                                        variant="contained" 
-                                        color="secondary" 
-                                        style={{ marginLeft: '10px' }}
+                                        <AddCircle />
+                                    </IconButton>
+                                    <IconButton
+                                        color="secondary"
                                         onClick={() => handleEditUser(user.id)}
                                     >
-                                        Edit
-                                    </Button>
+                                        <Edit />
+                                    </IconButton>
                                 </TableCell>
-                                <TableCell>
-                                    {user.orderCount}
-                                </TableCell>
+                                <TableCell>{user.orderCount}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-
-                {/* Pagination component(5 items per pages) */}
-                <Pagination 
-                    count={totalPages} 
-                    page={currentPage} 
-                    onChange={handlePageChange} 
-                    color="primary" 
-                    variant="outlined" 
-                    shape="rounded" 
-                    sx={{ mt: 2, display: 'flex', justifyContent: 'center' }} 
+                <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    color="primary"
+                    variant="outlined"
+                    shape="rounded"
+                    sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'center' }}
                 />
             </TableContainer>
 
             <Modal open={open} onClose={handleClose}>
                 <Box sx={{ ...modalStyle }}>
-                    <h2>Add Balance for {selectedUsername}</h2>
+                    <Typography variant="h6" gutterBottom>
+                        Add Balance for {selectedUsername}
+                    </Typography>
                     <TextField
                         type="number"
                         label="Amount"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         fullWidth
+                        sx={{ mb: 2 }}
                     />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSubmitBalance}
-                        sx={{ mt: 2 }}
-                    >
-                        Submit
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={handleClose}
-                        sx={{ mt: 2, ml: 2 }}
-                    >
-                        Cancel
-                    </Button>
+                    <Box display="flex" justifyContent="flex-end">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSubmitBalance}
+                            sx={{ mr: 1 }}
+                        >
+                            Submit
+                        </Button>
+                        <Button variant="outlined" onClick={handleClose}>
+                            Cancel
+                        </Button>
+                    </Box>
                 </Box>
             </Modal>
         </>
@@ -350,7 +211,7 @@ const modalStyle = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    borderRadius: '8px',
     boxShadow: 24,
     p: 4,
 };
