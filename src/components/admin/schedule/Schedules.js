@@ -1,7 +1,8 @@
-import { Box, CircularProgress, Pagination, Paper, TableContainer, TableCell, Button, TableRow, TableBody, Grid, TextField, Table, TableHead, Typography } from "@mui/material";
+import { Box, CircularProgress, Pagination, Paper, TableContainer, TableCell, Button, TableRow, TableBody, Grid, TextField, Table, TableHead, Typography, CardMedia, ImageListItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Image, VisibilityOutlined } from "@mui/icons-material";
 
 export const Schedules = () => {
 
@@ -88,29 +89,29 @@ export const Schedules = () => {
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
-                            <TableRow>
-                                <TableCell>Cinema</TableCell>
-                                <TableCell>Movie</TableCell>
-                                <TableCell>Image</TableCell>
-                                <TableCell>ScheduleDate</TableCell>
-                                <TableCell>Shift</TableCell>
-                                <TableCell>Action</TableCell>
+                            <TableRow sx={{backgroundColor: '#1976d2'}}>
+                                <TableCell sx={{color: 'white', textAlign: 'center', fontSize: '16px'}}>Cinema</TableCell>
+                                <TableCell sx={{color: 'white', textAlign: 'center', fontSize: '16px'}}>Movie</TableCell>
+                                <TableCell sx={{color: 'white', textAlign: 'center', fontSize: '16px'}}>Image</TableCell>
+                                <TableCell sx={{color: 'white', textAlign: 'center', fontSize: '16px'}}>ScheduleDate</TableCell>
+                                <TableCell sx={{color: 'white', textAlign: 'center', fontSize: '16px'}}>Shift</TableCell>
+                                <TableCell sx={{color: 'white', textAlign: 'center', fontSize: '16px'}}>Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                         {schedules.map((schedule) => (
                             <TableRow key={schedule.scheduleId}>
-                                <TableCell>{schedule.cinemaName}</TableCell>
-                                <TableCell>{schedule.movieName}</TableCell>
-                                <TableCell>
-                                <img src={schedule.movieImage} alt={schedule.movieName} style={{ width: '100px' }} />
+                                <TableCell sx={{ textAlign: 'center', color: '#657786', fontSize: '18px' }}>{schedule.cinemaName}</TableCell>
+                                <TableCell sx={{ textAlign: 'center', color: '#657786', fontSize: '18px' }}>{schedule.movieName}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <img src={schedule.movieImage} alt={schedule.movieName} style={{ width: '100px', height: 'auto' }} />
                                 </TableCell>
-                                <TableCell>{schedule.scheduleDate}</TableCell>
-                                <TableCell>{schedule.shiftName}</TableCell>
-                                <TableCell>
-                                <Button variant="contained" color="primary" onClick={() => handleViewDetails(schedule.scheduleId)}>
-                                    View Details
-                                </Button>
+                                <TableCell sx={{ textAlign: 'center' }}>{schedule.scheduleDate}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>{schedule.shiftName}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <Button variant="text" backgroundColor="transparent" onClick={() => handleViewDetails(schedule.scheduleId)}>
+                                        <VisibilityOutlined sx={{fontSize: '18px', color: 'primary'}} />
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}

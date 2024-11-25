@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, Button } from '@mui/material';
+import { Box, Typography, Grid, Button, Container } from '@mui/material';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -96,24 +96,30 @@ export const BookingPage = () => {
     }
     return (
         <>
+            <Container sx={{width: 'lg', marginLeft: 'auto', marginRight: 'auto'}}>
             {/* bản đồ ghế map */}
-            <Box sx={{ mt: 4 }}>
-                <Typography variant="h5" gutterBottom>Sơ đồ ghế</Typography>
-                <Grid container spacing={2}>
-                    {seats.map((seat) => (
-                        <Grid item xs={2} key={seat.id}>
-                            <Button
-                                variant="contained"
-                                color={bookedSeats.includes(seat.id) ? "secondary" : "primary"}
-                                onClick={() => handleSeatClick(seat.id, seat.seatType)}
-                                disabled={bookedSeats.includes(seat.id)}
-                            >
-                                {seat.seatRow}{seat.seatNumber} ({seat.seatType})
-                            </Button>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>
+                <Box sx={{ mt: 4 }}>
+                    <Typography variant="h4" fontSize={'28px'} fontWeight={'bold'} gutterBottom textAlign={'center'}
+                        sx={{color: '#1976d2'}}
+                    >
+                        SEAT MAP
+                    </Typography>
+                    <Grid container marginTop={2} spacing={2}>
+                        {seats.map((seat) => (
+                            <Grid item xs={2} key={seat.id}>
+                                <Button
+                                    variant="contained"
+                                    color={bookedSeats.includes(seat.id) ? "secondary" : "primary"}
+                                    onClick={() => handleSeatClick(seat.id, seat.seatType)}
+                                    disabled={bookedSeats.includes(seat.id)}
+                                >
+                                    {seat.seatRow}{seat.seatNumber} ({seat.seatType})
+                                </Button>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            </Container>
         </>
     )
         //     {/* bản đồ ghế map */}

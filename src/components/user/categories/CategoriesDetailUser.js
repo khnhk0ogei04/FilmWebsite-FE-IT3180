@@ -25,7 +25,6 @@ export const CategoriesDetailUser = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-      {/* Category Title */}
       <Typography variant="h3" align="center" fontWeight="bold" gutterBottom>
         {category.categoryName}
       </Typography>

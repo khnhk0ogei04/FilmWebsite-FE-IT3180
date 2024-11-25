@@ -1,136 +1,257 @@
-
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import './changePasswordComponent.css';
-import axios from 'axios';
-import { useState } from 'react';
-import Swal from 'sweetalert2';
+import React, { useState } from "react";
+import {
+  Button,
+  TextField,
+  Typography,
+  Box,
+  Card,
+  Alert,
+  FormControl,
+  FormLabel,
+  Grid,
+} from "@mui/material";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { FooterComponent1 } from "../footer1/FooterComponent1";
 
 export const ChangePasswordComponent = () => {
-    const [username, setUsername] = useState("");
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmNewPassword, setConfirmNewPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
+  const [username, setUsername] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+    const navigate = useNavigate();
+    
+  const handleChangePassword = async (event) => {
+    event.preventDefault();
+    if (newPassword !== confirmNewPassword) {
+      setErrorMessage("New password and confirmed password must match.");
+      return;
+    }
 
-    const handleChangePassword = async(event) => {
-        event.preventDefault();
-        if (newPassword !== confirmNewPassword) {
-            setErrorMessage("New password and confirmed password must be the same");
-            return;
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:8080/api/auth/change-password",
+        {
+          username,
+          currentPassword,
+          newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
+      );
+      setSuccessMessage("Password changed successfully!");
+      setErrorMessage("");
+      Swal.fire({
+        position: "top",
+        icon: "success",
+        title: "Password changed successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
 
-        try {
-            const token = localStorage.getItem("token");
-            console.log(token);
-            const response = await axios.post("http://localhost:8080/api/auth/change-password", {
-                username, currentPassword, newPassword
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            setSuccessMessage("Password changed successfully");
-            setErrorMessage("");
-            Swal.fire({
-                position: 'top',
-                icon: 'success',
-                title: 'Successfully changed password!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-        } catch (error) {
-            console.error("Change Password Error:", error);
-            setErrorMessage("Failed to change password");
-            setSuccessMessage("");
-        }
-    };
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
 
-    return (
-        <div className="change-password-box">
-            <Typography 
-                variant="h3" 
-                gutterBottom 
-                sx={{
-                    fontSize: '36px',
-                    textAlign: 'center',
-                    color: '#00ADEF',
-                    fontWeight: 'bold',
-                    marginTop: '20px'
-                }}
+    } catch (error) {
+      console.error("Change Password Error:", error);
+      setErrorMessage("Failed to change password. Please try again.");
+      setSuccessMessage("");
+    }
+  };
+
+  return (
+    <>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+        padding: "20px",
+      }}
+    >
+      <Card
+        sx={{
+          maxWidth: "450px",
+          width: "100%",
+          padding: "30px",
+          boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.1)",
+          borderRadius: "12px",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            textAlign: "center",
+            color: "#1976d2",
+            fontWeight: "bold",
+            marginBottom: "20px",
+          }}
+        >
+          Change Password
+        </Typography>
+        <form style={{ display: "flex", flexDirection: "column" }} onSubmit={handleChangePassword}>
+          <FormControl sx={{ width: "100%", marginBottom: "16px" }}>
+            <FormLabel
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                marginBottom: "8px",
+                color: "#333",
+              }}
             >
-                Change Password
-            </Typography>
-            <form className='change-password-form' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px' }}>
-                <TextField
-                    label={
-                        <Typography component="span">
-                            Username <span style={{ color: 'red' }}>*</span>
-                        </Typography>
-                    }
-                    type="text"
-                    variant="outlined"
-                    margin='normal'
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
-                    sx={{
-                        width: '100%',
-                        maxWidth: '350px'
-                    }}
-                />
-                <TextField
-                    label={
-                        <Typography component="span">
-                            Current Password <span style={{ color: 'red' }}>*</span>
-                        </Typography>
-                    }
-                    type="password"
-                    variant="outlined"
-                    margin="normal"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)} 
-                    sx={{
-                        maxWidth: '350px',
-                        width: '100%',
-                    }}
-                />
-                <TextField
-                    label="New Password"
-                    type="password"
-                    variant="outlined"
-                    margin="normal"
-                    value={newPassword} 
-                    onChange={(e) => setNewPassword(e.target.value)} 
-                    sx={{
-                        maxWidth: '350px',
-                        width: '100%',
-                    }}
-                />
-                <TextField
-                    label="Confirm New Password"
-                    type="password"
-                    variant="outlined"
-                    margin="normal"
-                    value={confirmNewPassword} 
-                    onChange={(e) => setConfirmNewPassword(e.target.value)} 
-                    sx={{
-                        maxWidth: '350px',
-                        width: '100%',
-                    }}
-                />
-                {errorMessage && <Typography color="error" sx={{ textAlign: 'center' }}>{errorMessage}</Typography>}
-                {successMessage && <Typography color="primary" sx={{ textAlign: 'center' }}>{successMessage}</Typography>}
-                <Button
-                    variant="contained"
-                    sx={{ alignSelf: 'center', marginTop: '20px' }}
-                    onClick={handleChangePassword}
-                >
-                    Change Password
-                </Button>
-            </form>
-        </div>
-    );
-}
+              Username{" "}
+              <Box component="span" sx={{ color: "red", marginLeft: "4px" }}>
+                *
+              </Box>
+            </FormLabel>
+            <TextField
+              type="text"
+              variant="outlined"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+          </FormControl>
+          <FormControl sx={{ width: "100%", marginBottom: "16px" }}>
+            <FormLabel
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                marginBottom: "8px",
+                color: "#333",
+              }}
+            >
+              Current Password{" "}
+              <Box component="span" sx={{ color: "red", marginLeft: "4px" }}>
+                *
+              </Box>
+            </FormLabel>
+            <TextField
+              type="password"
+              variant="outlined"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+          </FormControl>
+          <FormControl sx={{ width: "100%", marginBottom: "16px" }}>
+            <FormLabel
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                marginBottom: "8px",
+                color: "#333",
+              }}
+            >
+              New Password{" "}
+              <Box component="span" sx={{ color: "red", marginLeft: "4px" }}>
+                *
+              </Box>
+            </FormLabel>
+            <TextField
+              type="password"
+              variant="outlined"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+          </FormControl>
+          <FormControl sx={{ width: "100%", marginBottom: "16px" }}>
+            <FormLabel
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                marginBottom: "8px",
+                color: "#333",
+              }}
+            >
+              Confirm New Password{" "}
+              <Box component="span" sx={{ color: "red", marginLeft: "4px" }}>
+                *
+              </Box>
+            </FormLabel>
+            <TextField
+              type="password"
+              variant="outlined"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+          </FormControl>
+          {errorMessage && (
+            <Alert severity="error" sx={{ marginTop: "10px", textAlign: "center" }}>
+              {errorMessage}
+            </Alert>
+          )}
+          {successMessage && (
+            <Alert severity="success" sx={{ marginTop: "10px", textAlign: "center" }}>
+              {successMessage}
+            </Alert>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              marginTop: "20px",
+              padding: "10px",
+              backgroundColor: "#1976d2",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: "#115293",
+              },
+            }}
+          >
+            Change Password
+          </Button>
+        </form>
+      </Card>
+    </Box>
+    <Grid>
+      <FooterComponent1 />
+    </Grid>
+    </>
+  );
+};

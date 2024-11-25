@@ -1,185 +1,212 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Box, Grid, InputLabel } from '@mui/material';
+import { TextField, Button, Typography, Box, Grid, InputLabel, Card, Alert } from '@mui/material';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FooterComponent1 } from '../footer1/FooterComponent1';
 
 export const RegisterComponent = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const [selectedImage, setSelectedImage] = useState(null); 
-    const [imagePreview, setImagePreview] = useState('');
+  const [user, setUser] = useState({
+    username: '',
+    password: '',
+    fullname: '',
+    email: '',
+    city: '',
+    phone: '',
+  });
 
-    const [user, setUser] = useState({
-        username: '',
-        fullname: '',
-        avatar: '',
-        email: '',
-        city: '',
-        phone: '',
+  const navigate = useNavigate();
+  const EMAIL_REGEX = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z]{2,6}$/;
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setUser({
+      ...user,
+      [name]: value,
     });
+  };
 
-    const navigate = useNavigate();
-    const EMAIL_REGEX = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z]{2,6}$/;
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setUser({
-            ...user,
-            [name]: value
-        });
-    };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    const handleImageChange = (event) => {
-        const file = event.target.files[0]; 
-        setSelectedImage(file);
-        setImagePreview(URL.createObjectURL(file));
-    };
+    if (!EMAIL_REGEX.test(user.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Email',
+        text: 'Please enter a valid email address.',
+      });
+      return;
+    }
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    try {
+      await axios.post('http://localhost:8080/api/users', user);
+      Swal.fire({
+        icon: 'success',
+        title: 'Account Created',
+        text: 'Your account has been created successfully!',
+      });
+      navigate('/login');
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || 'Registration failed. Please try again.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: error.response?.data?.message || 'Something went wrong.',
+      });
+    }
+  };
 
-        if (!EMAIL_REGEX.test(user.email)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid format email, try again...',
-                text: 'Please enter a valid email, which contains @, [A-Za-z0-9]'
-            });
-            return;
-        }
-
-        try {
-            const response = await axios.post('http://localhost:8080/api/users', user);
-            Swal.fire({
-                icon: 'success',
-                title: 'Account Created',
-                text: 'Your account has been created successfully!',
-            });
-            navigate('/login');
-        } catch (error) {
-            if (error.response) {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Username Exists',
-                  text: 'This username is already taken.',
-                });
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Registration Failed',
-                  text: 'Wrong',
-                });
-              }
-        }
-    };
-
-    return (
-        <>
-            <Box className="register-box" sx={{ padding: '40px', backgroundColor: '#f9f9f9', borderRadius: '8px', maxWidth: '600px', marginTop: '80px', marginLeft: 'auto', marginRight: 'auto' }}>
-                <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{ fontSize: '32px', textAlign: 'center', color: '#cf1627', fontWeight: 'bold' }}
-                >
-                    Create New Account
-                </Typography>
-                <form className="register-form" onSubmit={handleSubmit}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                            label="Username"
-                            name="username"
-                            value={user.username}
-                            onChange={handleChange}
-                            variant="outlined"
-                            type='text'
-                            fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                            label="Password"
-                            name="password"
-                            value={user.password}
-                            onChange={handleChange}
-                            variant="outlined"
-                            type='password'
-                            fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                            label="Full Name"
-                            name="fullname"
-                            value={user.fullname}
-                            onChange={handleChange}
-                            variant="outlined"
-                            type='text'
-                            fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputLabel sx={{ mb: 2, fontWeight: 'bold' }}>Upload Image</InputLabel>
-                            <Button variant="contained" component="label">
-                                Upload Image
-                                <input type="file" hidden onChange={handleImageChange} />
-                            </Button>
-
-                            {imagePreview && (
-                                <Box mt={2}>
-                                    <img src={imagePreview} alt="Preview" style={{ width: '200px', height: '200px', objectFit: 'cover', marginTop: '20px', marginBottom: '20px' }} />
-                                </Box>
-                            )}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                            label="Email"
-                            name="email"
-                            value={user.email}
-                            onChange={handleChange}
-                            variant="outlined"
-                            type='text'
-                            fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                            label="City"
-                            name="city"
-                            value={user.city}
-                            onChange={handleChange}
-                            variant="outlined"
-                            type='text'
-                            fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                            label="Phone"
-                            name="phone"
-                            value={user.phone}
-                            onChange={handleChange}
-                            variant="outlined"
-                            type='text'
-                            fullWidth
-                            />
-                        </Grid>
-                    </Grid>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                        <Button
-                            variant="contained"
-                            type="submit"
-                            sx={{ backgroundColor: '#4CAF50', color: '#fff' }}
-                        >
-                            Register
-                        </Button>
-                    </Box>
-                </form>
+  return (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          backgroundColor: '#f7f7f7',
+          padding: '20px',
+        }}
+      >
+        <Card
+          sx={{
+            maxWidth: '600px',
+            width: '100%',
+            padding: '30px',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+            backgroundColor: '#fff',
+          }}
+        >
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{
+              textAlign: 'center',
+              color: '#1976D2',
+              fontWeight: 'bold',
+              marginBottom: '20px',
+            }}
+          >
+            Create New Account
+          </Typography>
+          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  label="Username"
+                  name="username"
+                  value={user.username}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Password"
+                  name="password"
+                  value={user.password}
+                  onChange={handleChange}
+                  variant="outlined"
+                  type="password"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Full Name"
+                  name="fullname"
+                  value={user.fullname}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <InputLabel sx={{ fontWeight: 'bold', marginBottom: '8px' }}>Upload Avatar</InputLabel>
+                <Button variant="contained" component="label">
+                  Upload Image
+                  <input type="file" hidden onChange={handleImageChange} />
+                </Button>
+                {imagePreview && (
+                  <Box mt={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <img
+                      src={imagePreview}
+                      alt="Avatar Preview"
+                      style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  </Box>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="City"
+                  name="city"
+                  value={user.city}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Phone"
+                  name="phone"
+                  value={user.phone}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              </Grid>
+            </Grid>
+            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  padding: '10px 20px',
+                  backgroundColor: '#1976D2',
+                  fontWeight: 'bold',
+                  '&:hover': { backgroundColor: '#115293' },
+                }}
+              >
+                Register
+              </Button>
             </Box>
-            <Box sx={{ marginTop: '50px' }}>
-                <FooterComponent1 />
-            </Box>
-        </>
-    );
+          </form>
+        </Card>
+      </Box>
+      <Box sx={{ marginTop: '30px' }}>
+        <FooterComponent1 />
+      </Box>
+    </>
+  );
 };
