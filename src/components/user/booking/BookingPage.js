@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, IconButton, Container } from "@mui/material";
 import ChairIcon from "@mui/icons-material/Chair";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -10,6 +10,7 @@ export const BookingPage = () => {
     const [scheduleDetails, setScheduleDetails] = useState(null);
     const [seats, setSeats] = useState([]);
     const [bookedSeats, setBookedSeats] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -47,8 +48,64 @@ export const BookingPage = () => {
     };
 
     const handlePayment = (seatId, seatType) => {
-        Swal.fire("Success", "Đặt ghế thành công!", "success");
-        setBookedSeats([...bookedSeats, seatId]);
+        // To extract the information of the user
+        const token = localStorage.getItem("token");
+        if (!token){
+            Swal.fire({
+                icon: 'Error',  
+                title: 'Error occured', 
+                text: 'You must login to book a ticket',
+                timer: 2000
+            });
+            navigate('/login');
+            return;
+        }
+
+        axios.get('http://localhost:8080/api/auth/me', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            const userId = response.data.id;
+
+            axios.get(`http://localhost:8080/api/users/${userId}`)
+                .then(userResponse => {
+                    const accountBalance = userResponse.data.accountBalance;
+                    // Debugging
+                    console.log(accountBalance);
+                    axios.get(`http://localhost:8080/api/discounts/calculate?movieId=${scheduleDetails.schedule.movieId}&seatType=${seatType}`)
+                        .then((priceResponse) => {
+                            const originalPrice = priceResponse.data.originalPrice;
+                            const discountedPrice = priceResponse.data.discountedPrice;
+                            if (accountBalance >= discountedPrice){
+                                axios.post(`http://localhost:8080/api/bookings`, {
+                                    userId: userId,
+                                    seatId: seatId,
+                                    scheduleId: scheduleId,
+                                    originalPrice: originalPrice,
+                                    discountedPrice: discountedPrice
+                                }, {
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`
+                                    }
+                                }).then(() => {
+                                    Swal.fire(
+                                        'Success', 'Đặt vé thành công', 'success'
+                                    );
+                                    setBookedSeats(
+                                        [
+                                            ...bookedSeats,
+                                            seatId
+                                        ]
+                                    );
+                                    window.location.reload();
+                                })
+                            } else {
+                                Swal.fire('Error', 'Số dư tài khoản không đủ', 'error');
+                            }
+                        });
+                })
+            })
     };
 
     if (!scheduleDetails) {

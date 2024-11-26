@@ -17,6 +17,7 @@ import axios from "axios";
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [fullName, setFullName] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [balance, setBalance] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const Header = () => {
         .then((response) => {
           setFullName(response.data.fullname);
           setBalance(response.data.accountBalance);
+          setAvatar(response.data.avatar);
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
@@ -58,14 +60,22 @@ const Header = () => {
 
   return (
     <>
-      <div id="top-banner" style={{textAlign: "center"}}>
-          <a href="/">
-              <img src="https://bhdstar.vn/wp-content/uploads/2024/10/banner-top.jpg" alt="Top Banner" />
-          </a>
+      <div id="top-banner" style={{ textAlign: "center" }}>
+        <a href="/">
+          <img
+            src="https://bhdstar.vn/wp-content/uploads/2024/10/banner-top.jpg"
+            alt="Top Banner"
+          />
+        </a>
       </div>
       <AppBar
         position="sticky"
-        sx={{ backgroundColor: "#ffffff", color: "#333", boxShadow: "none", borderBottom: "2px solid #eee" }}
+        sx={{
+          backgroundColor: "#ffffff",
+          color: "#333",
+          boxShadow: "none",
+          borderBottom: "2px solid #eee",
+        }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", px: 3 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -97,26 +107,57 @@ const Header = () => {
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {isLoggedIn ? (
-              <>
-                <Box>
-                  <Typography sx={{ fontWeight: "bold", fontSize: "16px" }}>
-                    Xin chào, {fullName}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  borderLeft: "1px solid #ddd",
+                  pl: 2,
+                }}
+              >
+                <Box sx={{ textAlign: "right" }}>
+                  <Typography
+                    sx={{
+                      fontWeight: "500",
+                      fontSize: "14px",
+                      color: "#1976d2",
+                    }}
+                  >
+                    {fullName}
                   </Typography>
-                  <Typography sx={{ color: "#1976d2", fontSize: "14px" }}>
+                  <Typography
+                    sx={{
+                      fontSize: "12px",
+                      color: "#333",
+                    }}
+                  >
                     Số dư: {balance?.toLocaleString("vi-VN")}đ
                   </Typography>
                 </Box>
+                <Avatar src={avatar} sx={{ width: 40, height: 40 }} />
                 <Button
                   variant="contained"
-                  color="info"
-                  sx={{ textTransform: "none", fontWeight: "bold" }}
-                  onClick={() => navigate("/user/donate")}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                    backgroundColor: "#4caf50",
+                  }}
+                  component={Link}
+                  to="/user/donate"
                 >
-                  Cúng dường
+                  Donate
                 </Button>
                 <Button
                   variant="outlined"
-                  sx={{ textTransform: "none", fontWeight: "bold", borderColor: "#1976d2", color: "#1976d2" }}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                    borderColor: "#1976d2",
+                    color: "#1976d2",
+                  }}
                   onClick={() => navigate("/change-password")}
                 >
                   Đổi mật khẩu
@@ -124,17 +165,27 @@ const Header = () => {
                 <Button
                   variant="contained"
                   color="error"
-                  sx={{ textTransform: "none", fontWeight: "bold" }}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                  }}
                   onClick={handleLogout}
                 >
                   Đăng xuất
                 </Button>
-              </>
+              </Box>
             ) : (
-              <>
+              <Box sx={{ display: "flex", gap: 2 }}>
                 <Button
                   variant="outlined"
-                  sx={{ textTransform: "none", fontWeight: "bold", borderColor: "#1976d2", color: "#1976d2" }}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                    borderColor: "#1976d2",
+                    color: "#1976d2",
+                  }}
                   component={Link}
                   to="/login"
                 >
@@ -142,13 +193,18 @@ const Header = () => {
                 </Button>
                 <Button
                   variant="contained"
-                  sx={{ textTransform: "none", fontWeight: "bold", backgroundColor: "#4caf50" }}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    fontSize: "12px",
+                    backgroundColor: "#4caf50",
+                  }}
                   component={Link}
                   to="/register"
                 >
                   Đăng ký
                 </Button>
-              </>
+              </Box>
             )}
           </Box>
           <IconButton

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, CardMedia, CardContent, Card, Button, IconButton, Avatar, Rating, TextField, Chip } from '@mui/material';
-import { Facebook, Twitter, Pinterest, LinkedIn, Email, LabelOutlined } from '@mui/icons-material';
+import { Facebook, Twitter, Pinterest, LinkedIn, Email, LabelOutlined, Label } from '@mui/icons-material';
 import StarIcon from '@mui/icons-material/Star';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -93,9 +93,12 @@ export const FilmDetailPage = () => {
                         <Typography variant="h4" gutterBottom fontWeight="bold" color="#007BFF">
                             {filmDetails.movieName}
                         </Typography>
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="h6" gutterBottom sx={{fontSize: '18px', justifyContent: 'center', alignItems: 'center'}}>
                             Rating: {averageRatings} 
                             <StarIcon sx={{ color: '#FFD700', verticalAlign: 'middle', ml: 1 }} />
+                        </Typography>
+                        <Typography variant='h6' sx={{mb: 1, color: '#9c27b0', fontSize: '18px', fontWeight:'bold'}}>
+                            Description:
                         </Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>
                             <div dangerouslySetInnerHTML={{ __html: filmDetails.description }} />
