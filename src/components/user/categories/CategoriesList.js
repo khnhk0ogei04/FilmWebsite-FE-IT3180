@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Grid, Pagination, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 export const CategoriesListUser = () => {
 
     const [categories, setCategories] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,6 +27,14 @@ export const CategoriesListUser = () => {
         navigate(`/user/categories/${categoryId}`);
     };
 
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const displayedCategories = categories.slice(startIndex, endIndex);
+
     return (
         <Box sx={{ py: 6, px: 4, backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
             <Typography 
@@ -31,17 +42,17 @@ export const CategoriesListUser = () => {
                 gutterBottom 
                 align="center" 
                 sx={{ 
-                    fontWeight: "bold", 
-                    color: "linear-gradient(to right, #FF6F61, #D72638)", 
-                    mb: 4, 
-                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)", 
-                    fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
+                    variant: "h3",
+                    align: "center",
+                    fontWeight:"bold",
+                    color: '#007BFF', 
+                    marginBottom: '30px'
                 }}
             >
                 Movie Categories
             </Typography>
             <Grid container spacing={4}>
-                {categories.map((category) => (
+                {displayedCategories.map((category) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={category.id}>
                         <Card 
                             sx={{ 
@@ -83,6 +94,24 @@ export const CategoriesListUser = () => {
                     </Grid>
                 ))}
             </Grid>
+            <Box
+                sx={{
+                    mt: 6,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center'
+                }}
+            >
+                <Pagination
+                    count={Math.ceil(categories.length / itemsPerPage)}
+                    onChange={handlePageChange}
+                    color="primary"
+                    shape="rounded"
+                    variant="outlined"
+                    size="medium"
+                />
+            </Box>
         </Box>
     );
 };

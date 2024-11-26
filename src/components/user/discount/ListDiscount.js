@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardMedia, Grid, Typography, Box, Pagination, Dialog, DialogContent } from '@mui/material';
+import { Card, CardContent, CardMedia, Grid, Typography, Box, Pagination, Dialog, DialogContent, Button } from '@mui/material';
 import axios from 'axios';
 
 export const ClientListDiscount = () => {
@@ -7,7 +7,7 @@ export const ClientListDiscount = () => {
     const [selectedDiscount, setSelectedDiscount] = useState(null);
     const [open, setOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(3); 
+    const [itemsPerPage] = useState(3);
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/discounts')
@@ -18,7 +18,7 @@ export const ClientListDiscount = () => {
                 console.log('Error fetching discounts:', error);
             });
     }, []);
-    
+
     const handleOpenModal = (discount) => {
         setSelectedDiscount(discount);
         setOpen(true);
@@ -38,27 +38,43 @@ export const ClientListDiscount = () => {
     };
 
     return (
-        <Box sx={{ p: 4 }}>
-            <Typography variant="h4" gutterBottom align="center">
-                Khuyến mãi
+        <Box sx={{ py: 6, px: 4, backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
+            <Typography 
+                variant="h3" 
+                align="center" 
+                sx={{ fontWeight: "bold", color: "#007BFF", mb: 4 }}
+            >
+                DISCOUNT
             </Typography>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={4}>
                 {currentDiscounts.map((discount) => (
                     <Grid item xs={12} sm={6} md={4} key={discount.id}>
-                        <Card sx={{ boxShadow: 3, borderRadius: 2, border: "1px solid #ddd", cursor:"pointer", padding: 2 }} onClick={() => handleOpenModal(discount)}>
+                        <Card 
+                            sx={{
+                                boxShadow: 4,
+                                borderRadius: 2,
+                                cursor: "pointer",
+                                overflow: "hidden",
+                                transition: "transform 0.3s",
+                                '&:hover': { transform: "scale(1.05)", boxShadow: 6 },
+                            }}
+                            onClick={() => handleOpenModal(discount)}
+                        >
                             <CardMedia
                                 component="img"
-                                height="250"
-                                image="https://bhdstar.vn/wp-content/uploads/2024/10/Combo-online-web.jpg"
+                                width= '100%'
+                                height='auto'
+                                image={discount.imageUrl || 'https://bhdstar.vn/wp-content/uploads/2024/10/Combo-online-web.jpg'}
                                 alt={discount.notificationTitle}
+                                sx={{ objectFit: "cover" }}
                             />
                             <CardContent>
-                                <Typography
-                                    gutterBottom
-                                    variant="h6"
-                                    component="div"
-                                    sx={{ color: '#32a852' }} 
+                                <Typography 
+                                    variant="h6" 
+                                    align="center" 
+                                    fontWeight="bold" 
+                                    sx={{ color: '#32a852' }}
                                 >
                                     {discount.notificationTitle}
                                 </Typography>
@@ -67,39 +83,64 @@ export const ClientListDiscount = () => {
                     </Grid>
                 ))}
             </Grid>
-            
-            <Dialog open={open} onClose={handleCloseModal} maxWidth="md" fullWidth>
-                <DialogContent>
+
+            <Dialog 
+                open={open} 
+                onClose={handleCloseModal} 
+                maxWidth="md" 
+                fullWidth
+            >
+                <DialogContent sx={{ p: 4 }}>
                     {selectedDiscount && (
-                        <Grid container spacing={3}>
+                        <Grid container spacing={3} alignItems="center">
                             <Grid item xs={12} md={5}>
                                 <img
                                     src={selectedDiscount.imageUrl || "https://bhdstar.vn/wp-content/uploads/2024/10/Combo-online-web.jpg"}
                                     alt={selectedDiscount.notificationTitle}
-                                    style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                                    style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}
                                 />
                             </Grid>
                             <Grid item xs={12} md={7}>
-                                <Typography gutterBottom variant="h5" component="div" sx={{ color: '#32a852' }}>
+                                <Typography 
+                                    variant="h5" 
+                                    gutterBottom 
+                                    sx={{ fontWeight: "bold", color: "#007BFF" }}
+                                >
                                     {selectedDiscount.notificationTitle}
                                 </Typography>
                                 <div
                                     dangerouslySetInnerHTML={{ __html: selectedDiscount.notificationContent }}
-                                    style={{ color: '#000', lineHeight: '1.6' }}
+                                    style={{ color: '#555', lineHeight: '1.6', marginTop: '16px' }}
                                 />
+                                <Box sx={{ textAlign: 'right', mt: 3 }}>
+                                    <Button 
+                                        variant="outlined" 
+                                        onClick={handleCloseModal}
+                                        sx={{ fontWeight: "bold" }}
+                                    >
+                                        Close
+                                    </Button>
+                                </Box>
                             </Grid>
                         </Grid>
                     )}
                 </DialogContent>
             </Dialog>
 
-
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Box 
+                sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    mt: 4 
+                }}
+            >
                 <Pagination
                     count={Math.ceil(discounts.length / itemsPerPage)}
                     page={currentPage}
                     onChange={handleChangePage}
                     color="primary"
+                    size="large"
+                    shape="rounded"
                 />
             </Box>
         </Box>

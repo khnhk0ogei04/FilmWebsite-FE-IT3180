@@ -1,5 +1,5 @@
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination } from "@mui/material";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -62,61 +62,78 @@ export const BookingListPage = () => {
     };
 
     return (
-        <>
-            <Box sx={{ p: 4 }} alignItems={'center'}>
-                <Typography variant="h4" gutterBottom textAlign={"center"} style={{ fontWeight: 'bold', color: "red" }}>
-                    Bookings History
-                </Typography>
+        <Box sx={{ py: 6, px: 4, backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
+            <Typography 
+                variant="h4" 
+                align="center" 
+                gutterBottom 
+                sx={{ fontWeight: 'bold', color: '#007BFF', mb: 4 }}
+            >
+                Booking History
+            </Typography>
 
-                <TableContainer component={Paper} sx={{ mt: 4 }}>
-                    <Table aria-label="booking history table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Ảnh</TableCell>
-                                <TableCell>Tên Phim</TableCell>
-                                <TableCell>Rạp</TableCell>
-                                <TableCell>Ngày Chiếu</TableCell>
-                                <TableCell>Suất Chiếu</TableCell>
-                                <TableCell>Ghế</TableCell>
-                                <TableCell>Mã QR</TableCell>
+            <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 4 }}>
+                <Table sx={{ minWidth: 700 }}>
+                    <TableHead>
+                        <TableRow sx={{ backgroundColor: '#007BFF' }}>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Movie</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Cinema</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Date</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Showtime</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>Seat</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>QR Code</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {bookings.map((booking) => (
+                            <TableRow 
+                                key={booking.id} 
+                                sx={{ '&:nth-of-type(even)': { backgroundColor: '#f4f4f4' } }}
+                            >
+                                <TableCell sx={{display: 'flex', alignSelf: 'center', justifyContent: 'center'}}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2  }}>
+                                        <Avatar 
+
+                                            src={booking.movieImage || 'https://via.placeholder.com/150'} 
+                                            alt={booking.movieName} 
+                                            variant="rounded" 
+                                            sx={{ width: 100, height: 'auto', border: '1px solid #ddd'}}
+                                        />
+                                        <Typography variant="subtitle1" fontWeight="bold" fontSize='20px'>
+                                            {booking.movieName}
+                                        </Typography>
+                                    </Box>
+                                </TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{booking.cinemaName}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{booking.scheduleDate}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{booking.shiftStart} - {booking.shiftEnd}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>
+                                    {booking.seatRow}{booking.seatNumber} ({booking.seatType})
+                                </TableCell>
+                                <TableCell sx={{display: 'flex', alignSelf: 'center', justifyContent: 'center'}}>
+                                    <Avatar 
+                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=BookingID:${booking.id}`} 
+                                        alt="QR Code" 
+                                        variant="square" 
+                                        sx={{ width: 100, height: 100}}
+                                    />
+                                </TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {bookings.map((booking) => (
-                                <TableRow key={booking.id}>
-                                    <TableCell>
-                                        <img
-                                            src={booking.movieImage || 'https://via.placeholder.com/150'}
-                                            alt={booking.movieName}
-                                            style={{ width: '100px', height: '100px', objectFit: 'contain' }}
-                                        />
-                                    </TableCell>
-                                    <TableCell>{booking.movieName}</TableCell>
-                                    <TableCell>{booking.cinemaName}</TableCell>
-                                    <TableCell>{booking.scheduleDate}</TableCell>
-                                    <TableCell>{booking.shiftStart} - {booking.shiftEnd}</TableCell>
-                                    <TableCell>{booking.seatRow}{booking.seatNumber} ({booking.seatType})</TableCell>
-                                    <TableCell>
-                                        <img
-                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=BookingID:${booking.id}`}
-                                            alt="QR Code"
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={handlePageChange}
-                        color="primary"
-                    />
-                </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Pagination 
+                    count={totalPages} 
+                    page={page} 
+                    onChange={handlePageChange} 
+                    color="primary" 
+                    size="large" 
+                    shape="rounded" 
+                />
             </Box>
-        </>
+        </Box>
     );
 };

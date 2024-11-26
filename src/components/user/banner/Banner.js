@@ -13,6 +13,10 @@ export const SliderBanner = () => {
       image: "https://www.bhdstar.vn/wp-content/uploads/2024/10/referenceSchemeHeadOfficeallowPlaceHoldertrueheight1069ldapp-17.jpg",
       title: "VENOM: THE LAST DANCE: KÈO CUỐI",
     },
+    {
+      image: "",
+      title: ""
+    }
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
