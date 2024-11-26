@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Grid, Typography, Button, IconButton, CircularProgress, Box, TextField } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Grid, Typography, IconButton, CircularProgress, Box, InputBase, Tooltip } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import './FilmSlider.css'; 
+import './FilmSlider.css';
 import { useNavigate } from 'react-router-dom';
 import { SliderBanner } from '../banner/Banner';
 
@@ -13,60 +14,59 @@ const FilmSlider = () => {
   const [films, setFilms] = useState([]);
   const [filteredFilms, setFilteredFilms] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchFilms();
   }, []);
 
-  const fetchFilms = async (term = "") => {
+  const fetchFilms = async (term = '') => {
     try {
       const response = await axios.get('http://localhost:8080/api/movies', {
         params: {
           status: true,
-          name: term
-        }
+          name: term,
+        },
       });
-      console.log(response);
       setFilms(response.data.content || []);
       setFilteredFilms(response.data.content || []);
       setCurrentIndex(0);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching films:', error);
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex + 1 + FILMS_PER_VIEW <= films.length ? prevIndex + 1 : 0
+    setCurrentIndex((prevIndex) =>
+      prevIndex + FILMS_PER_VIEW < films.length ? prevIndex + FILMS_PER_VIEW : 0
     );
   };
 
-
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex - 1 >= 0 ? prevIndex - 1 : Math.max(0, films.length - FILMS_PER_VIEW)
+    setCurrentIndex((prevIndex) =>
+      prevIndex - FILMS_PER_VIEW >= 0
+        ? prevIndex - FILMS_PER_VIEW
+        : Math.max(0, films.length - FILMS_PER_VIEW)
     );
   };
 
   const handleMovieClick = (movieId) => {
-    console.log(movieId);
     navigate(`/user/movies/${movieId}`);
-  }
+  };
 
   const handleSearch = () => {
     fetchFilms(searchTerm);
-  }
+  };
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
         <CircularProgress />
-      </div>
+      </Box>
     );
   }
 
@@ -75,59 +75,91 @@ const FilmSlider = () => {
   return (
     <>
       <SliderBanner />
-      <div className="film-slider-container">
-        <Typography variant="h3" fontWeight={'bold'} gutterBottom align="center">
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h4" fontWeight="bold" gutterBottom align="center" color="#1976d2">
           Now Showing / Sneak Show
         </Typography>
-        <Box style={{display: 'flex', justifyContent: "left", marginBottom: '20px', marginLeft: "130px"}}>
-          <TextField
-            variant='outlined'
-            placeholder='Search Film Here...'
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            style={{marginRight: '10px', width: '300px'}}
-          />
-          <Button variant='contained' color="info" onClick={handleSearch}>
-            Search
-          </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: '#f0f0f0',
+              borderRadius: '20px',
+              px: 2,
+              py: 1,
+              width: '400px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            }}
+          >
+            <InputBase
+              placeholder="Search for films..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              sx={{ flex: 1, ml: 1 }}
+            />
+            <Tooltip title="Search">
+              <IconButton onClick={handleSearch} sx={{ color: '#1976d2' }}>
+                <SearchIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-        <Typography variant='subtitle2' sx={{marginTop: '10px', marginLeft: '130px', marginBottom: '20px'}}>
-          Please type name of the film you want. Eg: in..., tìn...
-        </Typography>
+
         <Grid container alignItems="center" justifyContent="center" spacing={2}>
           <Grid item>
-            <IconButton onClick={handlePrev}>
-              <ArrowBackIosIcon fontSize="large" />
-            </IconButton>
+            <Tooltip title="Previous">
+              <IconButton onClick={handlePrev} sx={{ color: '#1976d2', fontSize: 'large' }}>
+                <ArrowBackIosNewIcon fontSize="large" />
+              </IconButton>
+            </Tooltip>
           </Grid>
           <Grid item xs={8} md={10}>
             <Grid container spacing={2}>
               {currentFilms.map((film) => (
-                <Grid item xs={12} sm={6} md={2} key={film.id}>
-                  <div className="film-card" onClick={() => handleMovieClick(film.id)} style={{cursor: "pointer"}}>
+                <Grid item xs={6} sm={4} md={2} key={film.id}>
+                  <Box
+                    onClick={() => handleMovieClick(film.id)}
+                    sx={{
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'transform 0.3s',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                      },
+                    }}
+                  >
                     <img
-                      src={film.image}
+                      src={film.image || 'https://via.placeholder.com/200x300'}
                       alt={film.movieName}
-                      className="film-image"
+                      style={{
+                        width: '100%',
+                        height: '250px',
+                        borderRadius: '8px',
+                        marginBottom: '8px',
+                        boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                      }}
                     />
-                    <Typography variant="caption" className="film-title" align="center">
+                    <Typography variant="h6" fontWeight="bold" sx={{ color: '#1976d2', mb: 0.5 }}>
                       {film.movieName}
                     </Typography>
-                    <Typography variant="subtitle1" align="center" display="block">
+                    <Typography variant="body2" color="text.secondary">
                       {film.directors}
                     </Typography>
-                  </div>
+                  </Box>
                 </Grid>
               ))}
             </Grid>
           </Grid>
           <Grid item>
-            <IconButton onClick={handleNext}>
-              <ArrowForwardIosIcon fontSize="large" />
-            </IconButton>
+            <Tooltip title="Next">
+              <IconButton onClick={handleNext} sx={{ color: '#1976d2', fontSize: 'large' }}>
+                <ArrowForwardIosIcon fontSize="large" />
+              </IconButton>
+            </Tooltip>
           </Grid>
         </Grid>
-      </div>
+      </Box>
     </>
   );
 };

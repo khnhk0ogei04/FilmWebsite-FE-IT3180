@@ -7,7 +7,7 @@ export const CategoriesListUser = () => {
 
     const [categories, setCategories] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = 4;
 
     const navigate = useNavigate();
 
@@ -109,7 +109,9 @@ export const CategoriesListUser = () => {
                     color="primary"
                     shape="rounded"
                     variant="outlined"
-                    size="medium"
+                    size="large"
+                    showFirstButton
+                    showLastButton
                 />
             </Box>
         </Box>

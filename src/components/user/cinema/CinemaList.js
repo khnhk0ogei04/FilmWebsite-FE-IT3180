@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardContent, CardActions, Button, Typography, Modal, Box, Pagination } from '@mui/material';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const CinemaList = () => {
   const [cinemas, setCinemas] = useState([]);
   const [selectedCinema, setSelectedCinema] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const ITEMS_PER_PAGES = 3;
-
-  const [indexStart, setIndexStart] = useState(0);
-  const [indexEnd, setIndexEnd] = useState(ITEMS_PER_PAGES);
-  const [displayedCinemas, setDisplayedCinemas] = useState(cinemas.slice(indexStart, indexEnd));
-
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false); // Move useState here
 
-  const navigate = useNavigate();
+  const ITEMS_PER_PAGE = 3; // Number of items per page
 
   useEffect(() => {
-    const fetchCinemas = async() => {
-      axios.get('http://localhost:8080/api/cinemas')
+    const fetchCinemas = async () => {
+      axios
+        .get('http://localhost:8080/api/cinemas')
         .then((response) => {
           setCinemas(response.data);
           setLoading(false);
@@ -29,8 +22,8 @@ const CinemaList = () => {
         .catch((error) => {
           console.error('Error fetching cinemas:', error);
         });
-      };
-      fetchCinemas();
+    };
+    fetchCinemas();
   }, []);
 
   if (loading) {
@@ -45,12 +38,13 @@ const CinemaList = () => {
     );
   }
 
-  const handleChangePage = (event, numberOfPage) => {
-    setCurrentPage(numberOfPage);
-    setIndexStart((numberOfPage - 1) * ITEMS_PER_PAGES);
-    setIndexEnd((indexStart + ITEMS_PER_PAGES));
-    setDisplayedCinemas(cinemas.slice(indexStart, indexEnd));
-  }
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const displayedCinemas = cinemas.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleChangePage = (event, page) => {
+    setCurrentPage(page);
+  };
 
   const handleOpen = (cinema) => {
     setSelectedCinema(cinema);
@@ -136,18 +130,18 @@ const CinemaList = () => {
         ))}
       </Grid>
       <Box
-        sx = {{mt: 4, textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}
-        display={'flex'}
+        sx={{ mt: 4, textAlign: 'center', justifyContent: 'center', alignItems: 'center', display: 'flex' }}
       >
         <Pagination
-          count={(Math.ceil(cinemas.length / ITEMS_PER_PAGES))}
+          count={Math.ceil(cinemas.length / ITEMS_PER_PAGE)}
           page={currentPage}
           color="primary"
           variant="outlined"
-          shape='rounded'
-          size='large'
-          showFirstButton showLastButton
-          onClick={handleChangePage}
+          shape="rounded"
+          size="large"
+          showFirstButton
+          showLastButton
+          onChange={handleChangePage}
         />
       </Box>
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
@@ -177,7 +171,6 @@ const CinemaList = () => {
           </Box>
         </Box>
       </Modal>
-
     </div>
   );
 };
