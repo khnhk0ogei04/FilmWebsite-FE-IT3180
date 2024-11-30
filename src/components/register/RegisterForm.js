@@ -48,6 +48,15 @@ export const RegisterComponent = () => {
       return;
     }
 
+    if (user.password.length < 6) {
+      Swal.fire({
+        icon: "error",
+        title: "Weak Password",
+        text: "Password must be at least 6 characters long.",
+      });
+      return;
+    }  
+
     try {
       await axios.post('http://localhost:8080/api/users', user);
       Swal.fire({
@@ -187,20 +196,21 @@ export const RegisterComponent = () => {
                 />
               </Grid>
             </Grid>
-            <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  padding: '10px 20px',
-                  backgroundColor: '#1976D2',
-                  fontWeight: 'bold',
-                  '&:hover': { backgroundColor: '#115293' },
-                }}
-              >
-                Register
-              </Button>
-            </Box>
+              <Box sx={{ textAlign: "center", marginTop: "20px" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    padding: "10px 20px",
+                    backgroundColor: "#1976D2",
+                    fontWeight: "bold",
+                    "&:hover": { backgroundColor: "#115293" },
+                  }}
+                  onClick={handleSubmit}
+                >
+                  Register
+                </Button>
+              </Box>
           </form>
         </Card>
       </Box>

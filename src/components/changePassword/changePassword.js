@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -22,8 +22,26 @@ export const ChangePasswordComponent = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-    const navigate = useNavigate();
+  const navigate = useNavigate();
     
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios
+        .get("http://localhost:8080/api/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUsername(response.data.username);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data", error);
+        });
+    }
+  }, []);
+
   const handleChangePassword = async (event) => {
     event.preventDefault();
     if (newPassword !== confirmNewPassword) {
@@ -125,6 +143,7 @@ export const ChangePasswordComponent = () => {
               type="text"
               variant="outlined"
               value={username}
+              disabled
               onChange={(e) => setUsername(e.target.value)}
               fullWidth
               sx={{
