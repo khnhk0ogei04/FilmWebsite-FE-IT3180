@@ -13,9 +13,12 @@ export const Footer = () => {
             <Container sx={{marginLeft: 'auto', marginRight: 'auto', maxWidth: "lg"}}            
             >
                 <Grid item>
-                    <Typography variant='h6' href="#" underline='none' sx={{color: '#555', fontWeight: 'bold', fontSize: '24px', textDecoration: 'none', textAlign: 'center'}}>
+                    <Typography variant='h5' href="#" underline='none' sx={{color: '#555', fontWeight: 'bold', fontSize: '24px', textDecoration: 'none', textAlign: 'center'}}>
                         GROUP 21 - CAPSTONE PROJECT - INTRODUCTION TO SOFTWARE ENGINEERING
                     </Typography>
+                </Grid>
+                <Grid container mt={2} spacing={3} justifyContent="center" alignItems={'center'} textAlign={'center'}>
+                    <Typography variant='h6' fontWeight={500} sx={{color: '#777'}}>Frontend UI </Typography>
                 </Grid>
                 <Box
                     sx={{
@@ -45,10 +48,6 @@ export const Footer = () => {
                     >
                         @2024.1 - 154918 - Copyright Reserved
                     </Typography>
-                </Grid>
-                <Grid container mt={2} spacing={3} justifyContent="center" alignItems={'center'} textAlign={'center'}>
-                    <Typography variant='body1' fontWeight={500} sx={{color: '#777'}}>Author: </Typography>
-                    <Link sx={{marginLeft: '10px', textDecoration: 'none', paddingBottom: '2px'}} href = 'https://www.facebook.com/khanhnd0112'>@khnh_mini_04</Link>
                 </Grid>
             </Container>
         </Box>

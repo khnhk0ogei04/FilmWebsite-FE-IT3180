@@ -99,7 +99,7 @@ export const BookingListPage = () => {
                                             variant="rounded" 
                                             sx={{ width: 100, height: 'auto', border: '1px solid #ddd'}}
                                         />
-                                        <Typography variant="subtitle1" fontWeight="bold" fontSize='20px'>
+                                        <Typography variant="title" fontSize='20px'>
                                             {booking.movieName}
                                         </Typography>
                                     </Box>

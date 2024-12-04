@@ -20,7 +20,13 @@ export const FooterComponent1 = () => {
                         </Link>
                     </Grid>
                 </Grid>
-
+                <Grid container mt={2} justifyContent="center">
+                    <Grid item>
+                        <Typography variant='h6' gutterBottom sx={{color: '#F56040', fontWeight: 600}}>
+                            -- Cinema Booking Ticket Website --
+                        </Typography>
+                    </Grid>
+                </Grid>
                 <Box
                     sx={{
                         display: 'flex',
@@ -31,16 +37,16 @@ export const FooterComponent1 = () => {
                     }}
                 >
                     <Link href="#" color="inherit">
-                        <Twitter sx={{ fontSize: '24px', color: '#555' }} />
+                        <Twitter sx={{ fontSize: '24px', color: '#1DA1F2' }} />
+                    </Link>
+                    <Link href="https://www.facebook.com/khanhnd0112" color="inherit">
+                        <Facebook sx={{ fontSize: '24px', color: '#17A9FD' }} />
+                    </Link>
+                    <Link href="https://www.facebook.com/khanhnd0112" color="inherit">
+                        <Instagram sx={{ fontSize: '24px', color: '#E1306C' }} />
                     </Link>
                     <Link href="#" color="inherit">
-                        <Facebook sx={{ fontSize: '24px', color: '#555' }} />
-                    </Link>
-                    <Link href="#" color="inherit">
-                        <Instagram sx={{ fontSize: '24px', color: '#555' }} />
-                    </Link>
-                    <Link href="#" color="inherit">
-                        <LinkedIn sx={{ fontSize: '24px', color: '#555' }} />
+                        <LinkedIn sx={{ fontSize: '24px', color: '#0A66C2' }} />
                     </Link>
                 </Box>
 
@@ -50,12 +56,8 @@ export const FooterComponent1 = () => {
                     align="center"
                     sx={{ mt: 2, color: '#777' }}
                 >
-                    © 2024 Pied Piper. All rights reserved.
+                    © 2024.1 - 154018 - All right reserved
                 </Typography>
-                <Grid container mt={2} spacing={3} justifyContent="center">
-                    Author: 
-                    <Link sx={{marginLeft: '10px', textDecoration: 'none'}} href = 'https://www.facebook.com/khanhnd0112'>@khnh_mini_04</Link>
-                </Grid>
             </Container>
         </Box>
     );

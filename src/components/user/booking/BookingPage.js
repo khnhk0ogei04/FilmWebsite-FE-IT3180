@@ -10,35 +10,68 @@ export const BookingPage = () => {
     const [scheduleDetails, setScheduleDetails] = useState(null);
     const [seats, setSeats] = useState([]);
     const [bookedSeats, setBookedSeats] = useState([]);
+    const [regularPrice, setRegularPrice] = useState(0);
+    const [vipPrice, setVipPrice] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
         axios
             .get(`http://localhost:8080/api/schedules/${scheduleId}`)
-            .then((response) => setScheduleDetails(response.data))
-            .catch((error) => console.log("Error fetching schedule details:", error));
+            .then((response) => {
+                setScheduleDetails(response.data);
+                console.log("Schedule details:", response.data);
+            })
+            .catch((error) => console.error("Error fetching schedule details:", error));
 
         axios
             .get(`http://localhost:8080/api/seats?scheduleId=${scheduleId}`)
             .then((response) => setSeats(response.data))
-            .catch((error) => console.log("Error fetching seats:", error));
+            .catch((error) => console.error("Error fetching seats:", error));
 
         axios
             .get(`http://localhost:8080/api/seats/booked?scheduleId=${scheduleId}`)
             .then((response) => setBookedSeats(response.data.map((seat) => seat.seatId)))
-            .catch((error) => console.log("Error fetching booked seats:", error));
+            .catch((error) => console.error("Error fetching booked seats:", error));
     }, [scheduleId]);
+
+    useEffect(() => {
+        if (scheduleDetails && scheduleDetails.schedule) {
+            axios
+                .get(
+                    `http://localhost:8080/api/discounts/calculate?movieId=${scheduleDetails.schedule.movieId}&seatType=VIP`
+                )
+                .then((response) => {
+                    setVipPrice(response.data.discountedPrice || 0);
+                    console.log("VIP price details:", response.data);
+                })
+                .catch((error) =>
+                    console.error("Error fetching VIP seat prices:", error)
+                );
+
+            axios
+                .get(
+                    `http://localhost:8080/api/discounts/calculate?movieId=${scheduleDetails.schedule.movieId}&seatType=Regular`
+                )
+                .then((response) => {
+                    setRegularPrice(response.data.discountedPrice || 0);
+                    console.log("Regular price details:", response.data);
+                })
+                .catch((error) =>
+                    console.error("Error fetching Regular seat prices:", error)
+                );
+        }
+    }, [scheduleDetails]);
 
     const handleSeatClick = (seatId, seatType) => {
         if (bookedSeats.includes(seatId)) {
-            Swal.fire("Error", "Ghế đã được đặt, vui lòng chọn ghế khác", "error");
+            Swal.fire("Error", "Seat has been booked", "error");
         } else {
             Swal.fire({
-                title: "Xác nhận thanh toán",
-                text: "Bạn có chắc chắn muốn đặt ghế này không?",
+                title: "Confirm payment?",
+                text: "Okay confirm payment?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: "Thanh toán",
+                confirmButtonText: "Pay",
             }).then((result) => {
                 if (result.isConfirmed) {
                     handlePayment(seatId, seatType);
@@ -48,73 +81,79 @@ export const BookingPage = () => {
     };
 
     const handlePayment = (seatId, seatType) => {
-        // To extract the information of the user
         const token = localStorage.getItem("token");
-        if (!token){
+        if (!token) {
             Swal.fire({
-                icon: 'Error',  
-                title: 'Error occured', 
-                text: 'You must login to book a ticket',
-                timer: 2000
+                icon: "error",
+                title: "Error",
+                text: "You must sign in to book ticket",
             });
-            navigate('/login');
+            navigate("/login");
             return;
         }
 
-        axios.get('http://localhost:8080/api/auth/me', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => {
-            const userId = response.data.id;
-
-            axios.get(`http://localhost:8080/api/users/${userId}`)
-                .then(userResponse => {
-                    const accountBalance = userResponse.data.accountBalance;
-                    // Debugging
-                    console.log(accountBalance);
-                    axios.get(`http://localhost:8080/api/discounts/calculate?movieId=${scheduleDetails.schedule.movieId}&seatType=${seatType}`)
-                        .then((priceResponse) => {
-                            const originalPrice = priceResponse.data.originalPrice;
-                            const discountedPrice = priceResponse.data.discountedPrice;
-                            if (accountBalance >= discountedPrice){
-                                axios.post(`http://localhost:8080/api/bookings`, {
-                                    userId: userId,
-                                    seatId: seatId,
-                                    scheduleId: scheduleId,
-                                    originalPrice: originalPrice,
-                                    discountedPrice: discountedPrice
-                                }, {
-                                    headers: {
-                                        'Authorization': `Bearer ${token}`
-                                    }
-                                }).then(() => {
-                                    Swal.fire(
-                                        'Success', 'Đặt vé thành công', 'success'
-                                    );
-                                    setBookedSeats(
-                                        [
-                                            ...bookedSeats,
-                                            seatId
-                                        ]
-                                    );
-                                    window.location.reload();
-                                })
-                            } else {
-                                Swal.fire('Error', 'Số dư tài khoản không đủ', 'error');
-                            }
-                        });
-                })
+        axios
+            .get("http://localhost:8080/api/auth/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             })
+            .then((response) => {
+                const userId = response.data.id;
+
+                axios
+                    .get(`http://localhost:8080/api/users/${userId}`)
+                    .then((userResponse) => {
+                        const accountBalance = userResponse.data.accountBalance;
+
+                        axios
+                            .get(`http://localhost:8080/api/discounts/calculate?movieId=${scheduleDetails.schedule.movieId}&seatType=${seatType}`)
+                            .then((priceResponse) => {
+                                console.log(seatType);
+                                const originalPrice = priceResponse.data.originalPrice;
+                                const discountedPrice = priceResponse.data.discountedPrice;
+
+                                if (accountBalance >= discountedPrice) {
+                                    axios
+                                        .post(
+                                            `http://localhost:8080/api/bookings`,
+                                            {
+                                                userId: userId,
+                                                seatId: seatId,
+                                                scheduleId: scheduleId,
+                                                originalPrice: originalPrice,
+                                                discountedPrice: discountedPrice,
+                                            },
+                                            {
+                                                headers: {
+                                                    Authorization: `Bearer ${token}`,
+                                                },
+                                            }
+                                        )
+                                        .then(() => {
+                                            Swal.fire("Thành công", "Đặt vé thành công!", "success");
+                                            setBookedSeats([...bookedSeats, seatId]);
+                                            window.location.reload();
+                                        });
+                                } else {
+                                    Swal.fire("Lỗi", "Số dư tài khoản không đủ.", "error");
+                                }
+                            });
+                    });
+            });
     };
+
+    const groupedSeats = seats.reduce((acc, seat) => {
+        if (!acc[seat.seatRow]) {
+            acc[seat.seatRow] = [];
+        }
+        acc[seat.seatRow].push(seat);
+        return acc;
+    }, {});
 
     if (!scheduleDetails) {
         return (
-            <Typography
-                variant="h5"
-                align="center"
-                sx={{ mt: 4, fontWeight: "bold", color: "gray" }}
-            >
+            <Typography variant="h5" align="center" sx={{ mt: 4, fontWeight: "bold", color: "gray" }}>
                 Loading...
             </Typography>
         );
@@ -122,12 +161,7 @@ export const BookingPage = () => {
 
     return (
         <Container sx={{ mt: 4 }}>
-            <Typography
-                variant="h4"
-                textAlign="center"
-                gutterBottom
-                sx={{ fontWeight: "bold", color: "#1976d2" }}
-            >
+            <Typography variant="h4" textAlign="center" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
                 Seat Map
             </Typography>
             <Box
@@ -139,51 +173,56 @@ export const BookingPage = () => {
                     boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
                 }}
             >
-                <Grid container spacing={2} justifyContent="center">
-                    {seats.map((seat) => (
-                        <Grid item key={seat.id} xs={1.5} sm={1} md={0.8}>
-                            <IconButton
-                                onClick={() => handleSeatClick(seat.id, seat.seatType)}
-                                disabled={bookedSeats.includes(seat.id)}
-                                sx={{
-                                    backgroundColor: bookedSeats.includes(seat.id)
-                                        ? "#E57373"
-                                        : seat.seatType === "VIP"
-                                        ? "#FFD700"
-                                        : "#90CAF9",
-                                    borderRadius: "8px",
-                                    "&:hover": {
-                                        backgroundColor: bookedSeats.includes(seat.id)
-                                            ? "#E57373"
-                                            : seat.seatType === "VIP"
-                                            ? "#FFC107"
-                                            : "#64B5F6",
-                                    },
-                                }}
-                            >
-                                <ChairIcon
-                                    sx={{
-                                        fontSize: 30,
-                                        color: bookedSeats.includes(seat.id) ? "#E57373" : "#FFFFFF",
-                                    }}
-                                />
-                            </IconButton>
-                            <Typography
-                                variant="caption"
-                                textAlign="center"
-                                sx={{
-                                    display: "block",
-                                    mt: 0.5,
-                                    fontWeight: "bold",
-                                    color: bookedSeats.includes(seat.id) ? "#E57373" : "#333",
-                                }}
-                            >
-                                {seat.seatRow}
-                                {seat.seatNumber}
-                            </Typography>
+                {Object.entries(groupedSeats).map(([row, rowSeats]) => (
+                    <Box key={row} sx={{ mb: 3 }}>
+                        <Grid container spacing={2} justifyContent="center">
+                            {rowSeats.map((seat) => (
+                                <Grid item key={seat.id} xs={1.5} sm={1} md={0.8}>
+                                    <IconButton
+                                        onClick={() => handleSeatClick(seat.id, seat.seatType)}
+                                        disabled={bookedSeats.includes(seat.id)}
+                                        sx={{
+                                            backgroundColor: bookedSeats.includes(seat.id)
+                                                ? "#E57373"
+                                                : seat.seatType === "VIP"
+                                                ? "#FFD700"
+                                                : "#90CAF9",
+                                            borderRadius: "8px",
+                                            "&:hover": {
+                                                backgroundColor: bookedSeats.includes(seat.id)
+                                                    ? "#E57373"
+                                                    : seat.seatType === "VIP"
+                                                    ? "#FFC107"
+                                                    : "#64B5F6",
+                                            },
+                                        }}
+                                    >
+                                        <ChairIcon
+                                            sx={{
+                                                fontSize: 30,
+                                                color: bookedSeats.includes(seat.id) ? "#E57373" : "#FFFFFF",
+                                            }}
+                                        />
+                                    </IconButton>
+                                    <Typography
+                                        variant="caption"
+                                        textAlign="center"
+                                        sx={{
+                                            display: "block",
+                                            mt: 0.5,
+                                            fontWeight: "bold",
+                                            textAlign: 'center',
+                                            color: bookedSeats.includes(seat.id) ? "#E57373" : "#333",
+                                        }}
+                                    >
+                                        {seat.seatRow}
+                                        {seat.seatNumber}
+                                    </Typography>
+                                </Grid>
+                            ))}
                         </Grid>
-                    ))}
-                </Grid>
+                    </Box>
+                ))}
                 <Box sx={{ mt: 4, textAlign: "center" }}>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                         Legend
@@ -198,11 +237,11 @@ export const BookingPage = () => {
                     >
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                             <ChairIcon sx={{ fontSize: 30, color: "#FFD700" }} />
-                            <Typography variant="body2">VIP Seat</Typography>
+                            <Typography variant="body2">VIP Seat (Price: {vipPrice} VND)</Typography>
                         </Box>
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                             <ChairIcon sx={{ fontSize: 30, color: "#90CAF9" }} />
-                            <Typography variant="body2">Regular Seat</Typography>
+                            <Typography variant="body2">Regular Seat (Price: {regularPrice} VND)</Typography>
                         </Box>
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                             <ChairIcon sx={{ fontSize: 30, color: "#E57373" }} />
