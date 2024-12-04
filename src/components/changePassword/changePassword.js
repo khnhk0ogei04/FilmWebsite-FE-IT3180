@@ -48,6 +48,14 @@ export const ChangePasswordComponent = () => {
       setErrorMessage("New password and confirmed password must match.");
       return;
     }
+    if (newPassword.length < 6){
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Password must contain at least 6 characters'
+      });
+      return;
+    }
 
     try {
       const token = localStorage.getItem("token");

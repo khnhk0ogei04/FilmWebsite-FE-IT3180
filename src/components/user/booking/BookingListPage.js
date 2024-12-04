@@ -64,12 +64,12 @@ export const BookingListPage = () => {
     return (
         <Box sx={{ py: 6, px: 4, backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
             <Typography 
-                variant="h4" 
+                variant="h3" 
                 align="center" 
                 gutterBottom 
                 sx={{ fontWeight: 'bold', color: '#007BFF', mb: 4 }}
             >
-                Booking History
+                BOOKING HISTORY
             </Typography>
 
             <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 4 }}>

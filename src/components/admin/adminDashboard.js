@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
-import { Button, Table, TableCell, TableRow, TableContainer, TableHead, Switch, FormControlLabel, TableBody, Pagination, Box, Paper } from '@mui/material';
+import { Button, Table, TableCell, TableRow, TableContainer, TableHead, Switch, FormControlLabel, TableBody, Pagination, Box, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export const AdminDashboard = () => {
@@ -62,7 +62,9 @@ export const AdminDashboard = () => {
 
     return (
         <>
-            <h1 className='text-center'>Film List</h1>
+            <Typography variant='h3' gutterBottom sx={{fontSize: '38px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center'}}>
+                FILM LIST
+            </Typography>
             <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <FormControlLabel
                     control={<Switch checked={showActive} onChange={handleToggle} />}

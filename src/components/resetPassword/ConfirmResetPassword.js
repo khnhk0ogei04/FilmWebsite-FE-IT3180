@@ -14,6 +14,14 @@ export const ConfirmResetPassword = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (newPassword.length < 6){
+            Swal.fire({
+                icon: "error",
+                title: "Weak Password",
+                text: "Password must be at least 6 characters long.",
+            });
+            return;
+        }
         try {
             const response = await axios.post("http://localhost:8080/api/users/reset-password/confirm", null, {
                 params: { token, newPassword }

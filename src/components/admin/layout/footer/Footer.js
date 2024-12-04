@@ -35,7 +35,11 @@ export const Footer = () => {
                         </Link>
                     </Grid>
                 </Grid>
-
+                <Grid container spacing = {3} justifyContent={'center'} marginTop={3}>
+                    <Typography variant='h6' gutterBottom sx={{color: '#555', fontWeight: 'bold'}}>
+                        Capstone Project of IT3180 - Introduction to Software Engineering
+                    </Typography>
+                </Grid>
                 <Box
                     sx={{
                         display: 'flex',

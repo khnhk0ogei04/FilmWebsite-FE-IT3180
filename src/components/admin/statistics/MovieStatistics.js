@@ -17,10 +17,12 @@ import {
   FormControl,
   InputLabel,
   CardMedia,
+  IconButton,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { ViewAgendaOutlined, VisibilityOutlined } from '@mui/icons-material';
 
 export const MovieStatistics = () => {
   const [movies, setMovies] = useState([]);
@@ -163,9 +165,13 @@ export const MovieStatistics = () => {
                   )}
                 </TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>
-                  <Button variant="contained" color="primary" onClick={() => handleViewStatistics(movie.movieId)}>
-                    View
-                  </Button>
+                  <IconButton 
+                    variant='contained'
+                    color = 'primary' 
+                    onClick={() => handleViewStatistics(movie.movieId)}
+                  >
+                    <VisibilityOutlined sx={{color: '#1976d2', fontSize: '28px'}}/>
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
