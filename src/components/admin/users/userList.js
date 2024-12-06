@@ -119,6 +119,9 @@ export const UserList = () => {
 
     return (
         <>
+            <Typography variant='h3' gutterBottom sx={{fontSize: '38px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center'}}>
+                USERS LIST
+            </Typography>
             <TableContainer component={Paper} sx={{ mt: 3 }}>
                 <Table>
                     <TableHead>

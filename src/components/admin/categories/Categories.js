@@ -64,8 +64,8 @@ export const CategoriesList = () => {
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Typography variant="h3" gutterBottom sx={{textAlign: 'center'}}>
-                Categories List
+            <Typography variant='h3' gutterBottom sx={{fontSize: '38px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center'}}>
+                CATEGORIES LIST
             </Typography>
 
             {errorMessage && (

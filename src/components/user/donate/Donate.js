@@ -6,6 +6,7 @@ export const Donate = () => {
         <Box 
             sx={{
                 display: 'flex', 
+                flexDirection: 'column', 
                 justifyContent: 'center', 
                 alignItems: 'center', 
                 minHeight: '100vh', 
@@ -13,7 +14,7 @@ export const Donate = () => {
                 padding: 4
             }}
         >
-            <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, mr: 8 }}>
+            <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, mb: 4 }}>
                 <CardMedia
                     component="img"
                     image="https://res.cloudinary.com/davwqqao1/image/upload/v1730040475/ny7ywevgkghy8fidmhgy.png" 
@@ -29,33 +30,26 @@ export const Donate = () => {
                     </Typography>
                 </CardContent>
             </Card>
-
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign:'center' }}>
-                <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: '#333' }}>
-                    Chọn cách cúng dường
-                </Typography>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    sx={{ mb: 2, width: 200 }}
-                >
-                    Cúng chuyển khoản
-                </Button>
-                <Button 
-                    variant="contained" 
-                    color="secondary" 
-                    sx={{ mb: 2, width: 200 }}
-                >
-                    Cúng ở hòm công đức
-                </Button>
-                <Button 
-                    variant="contained" 
-                    color="success" 
-                    sx={{ width: 200 }}
-                >
-                    Nhét vào tay tượng phật
-                </Button>
-            </Box>
+            <Button
+                variant="contained"
+                sx={{
+                    backgroundColor: '#1e90ff',
+                    color: '#fff',
+                    padding: '10px 20px',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    borderRadius: '25px',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                    transition: 'transform 0.2s ease, background-color 0.3s ease',
+                    '&:hover': {
+                        backgroundColor: '#0077cc',
+                        transform: 'scale(1.1)',
+                    },
+                }}
+            >
+                DONATE HERE
+            </Button>
         </Box>
     );
 };

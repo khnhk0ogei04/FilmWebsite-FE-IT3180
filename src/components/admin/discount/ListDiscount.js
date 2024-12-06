@@ -78,13 +78,8 @@ export const ListDiscount = () => {
 
     return (
         <Box sx={{ p: 4 }}>
-            <Typography
-                variant="h4"
-                gutterBottom
-                align="center"
-                sx={{ fontWeight: 'bold', mb: 3 }}
-            >
-                Discount List
+            <Typography variant='h3' gutterBottom sx={{fontSize: '38px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center'}}>
+                DISCOUNT LIST
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                 <Button

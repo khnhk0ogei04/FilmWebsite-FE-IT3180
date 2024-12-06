@@ -90,8 +90,8 @@ export const MovieStatistics = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-        Movie Statistics
+      <Typography variant='h3' gutterBottom sx={{fontSize: '38px', fontWeight: 'bold', color: '#1976d2', textAlign: 'center'}}>
+        MOVIE STATISTICS
       </Typography>
 
       <Grid container justifyContent="flex-end" sx={{ mb: 3 }}>

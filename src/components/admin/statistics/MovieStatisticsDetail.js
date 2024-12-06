@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const MovieStatisticsDetail = () => {
     const {id} = useParams();
-    const navigate = useNavigate(); // Để điều hướng khi nhấn nút "Xem chi tiết"
+    const navigate = useNavigate(); 
 
     const [movieDetail, setMovieDetail] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -30,8 +30,25 @@ export const MovieStatisticsDetail = () => {
 
     if (loading) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Box 
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    zIndex: 1000,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)' 
+                }}
+            >
                 <CircularProgress />
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                    Loading Statistics
+                </Typography>
             </Box>
         );
     }

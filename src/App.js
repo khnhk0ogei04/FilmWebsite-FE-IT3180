@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import { BrowserRouter, useNavigate } from 'react-router-dom';
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import AlertService from './alert/alertService';  // Make sure the path is correct based on your project structure
+import React from 'react';
+import { Route, Routes, Navigate, BrowserRouter } from "react-router-dom";
+import AlertService from './alert/alertService';  
 import { LoginComponent } from './components/login/LoginComponent';
-import RegistrationComponent, { RegisterComponent } from './components/register/RegisterForm';
+import { RegisterComponent } from './components/register/RegisterForm';
 import AdminLayout from './components/admin/layout/adminLayout';
 import { AdminDashboard } from './components/admin/adminDashboard';
 import AdminAccountInfo from './components/admin/adminAccountInfo/adminAccountInfo';
 import { ChangePasswordComponent } from './components/changePassword/changePassword';
 import { ResetPassword } from './components/resetPassword/ResetPassword';
-import { MovieDetail } from './components/admin/movieDetail';
+import { MovieDetail } from './components/admin/movies/movieDetail';
 import { CategoriesList } from './components/admin/categories/Categories';
 import { CategoryDetail } from './components/admin/categories/CategoryDetail';
 import { AddNewMovie } from './components/admin/movies/addNewMovie';
