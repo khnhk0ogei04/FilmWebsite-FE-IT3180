@@ -104,7 +104,7 @@ export const CategoriesList = () => {
                         >
                             <CardMedia
                                 component="img"
-                                height="350"
+                                height="450"
                                 image={category.image}
                                 alt={category.categoryName}
                                 sx={{

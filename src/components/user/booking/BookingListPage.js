@@ -90,32 +90,47 @@ export const BookingListPage = () => {
                                 key={booking.id} 
                                 sx={{ '&:nth-of-type(even)': { backgroundColor: '#f4f4f4' } }}
                             >
-                                <TableCell sx={{display: 'flex', alignSelf: 'center', justifyContent: 'center'}}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2  }}>
-                                        <Avatar 
 
-                                            src={booking.movieImage || 'https://via.placeholder.com/150'} 
-                                            alt={booking.movieName} 
-                                            variant="rounded" 
-                                            sx={{ width: 100, height: 'auto', border: '1px solid #ddd'}}
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <Avatar
+                                            src={booking.movieImage || 'https://via.placeholder.com/150'}
+                                            alt={booking.movieName}
+                                            variant="rounded"
+                                            sx={{ width: 80, height: 120, border: '1px solid #ddd' }}
                                         />
-                                        <Typography variant="title" fontSize='20px'>
+                                        <Typography 
+                                            variant="h6" 
+                                            sx={{ fontWeight: 'bold', color: '#007BFF', fontSize: '18px' }}
+                                        >
                                             {booking.movieName}
                                         </Typography>
                                     </Box>
                                 </TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{booking.cinemaName}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{booking.scheduleDate}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{booking.shiftStart} - {booking.shiftEnd}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>
+
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <Typography sx={{ fontSize: '16px', fontWeight: '600', color: '#333' }}>
+                                        {booking.cinemaName}
+                                    </Typography>
+                                </TableCell>
+
+                                <TableCell sx={{ textAlign: 'center', fontSize: '14px', color: '#555' }}>
+                                    {booking.scheduleDate}
+                                </TableCell>
+
+                                <TableCell sx={{ textAlign: 'center', fontSize: '14px', color: '#555' }}>
+                                    {booking.shiftStart} - {booking.shiftEnd}
+                                </TableCell>
+
+                                <TableCell sx={{ textAlign: 'center', fontSize: '14px', color: '#555' }}>
                                     {booking.seatRow}{booking.seatNumber} ({booking.seatType})
                                 </TableCell>
-                                <TableCell sx={{display: 'flex', alignSelf: 'center', justifyContent: 'center'}}>
-                                    <Avatar 
-                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=BookingID:${booking.id}`} 
-                                        alt="QR Code" 
-                                        variant="square" 
-                                        sx={{ width: 100, height: 100}}
+                                <TableCell sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Avatar
+                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=BookingID:${booking.id}`}
+                                        alt="QR Code"
+                                        variant="square"
+                                        sx={{ width: 100, height: 100 }}
                                     />
                                 </TableCell>
                             </TableRow>

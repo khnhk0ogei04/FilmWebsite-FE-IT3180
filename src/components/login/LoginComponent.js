@@ -15,6 +15,11 @@ export const LoginComponent = () => {
   };
 
   const handleLogin = async () => {
+    if (!username.trim() || !password.trim()) {
+      setErrorMessage('Please enter both username and password');
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
       const { jwt, role } = response.data;
@@ -59,7 +64,10 @@ export const LoginComponent = () => {
               type="text"
               margin="normal"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setErrorMessage('');
+              }}
               fullWidth
               required
             />
@@ -69,7 +77,10 @@ export const LoginComponent = () => {
               variant="outlined"
               margin="normal"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrorMessage(''); 
+              }}
               fullWidth
               required
             />
@@ -78,39 +89,39 @@ export const LoginComponent = () => {
                 {errorMessage}
               </Typography>
             )}
-                <Button
-                onClick={handleLogin}
-                variant="contained"
-                fullWidth
-                sx={{ mt: 3, mb: 2 }}
-                >
-                Login
-                </Button>
-            </form>
-            <Grid container justifyContent="space-between" alignItems="center" sx={{ mt: 2 }}>
-                <Grid item>
-                <NavLink
-                    to={'/reset-password'}
-                    style={{ textDecoration: 'none', color: '#1976d2', fontSize: '14px' }}
-                >
-                    Forgot Password?
-                </NavLink>
-                </Grid>
-                <Grid item>
-                <Button
-                    variant="text"
-                    onClick={handleCreateNewAccount}
-                    sx={{ textTransform: 'none', fontSize: '14px' }}
-                >
-                    Create New Account
-                </Button>
-                </Grid>
-                </Grid>
-            </Paper>
-        </Container>
-        <Box sx={{ marginTop: '50px' }}>
-            <FooterComponent1 />
-        </Box>
+            <Button
+              onClick={handleLogin}
+              variant="contained"
+              fullWidth
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Login
+            </Button>
+          </form>
+          <Grid container justifyContent="space-between" alignItems="center" sx={{ mt: 2 }}>
+            <Grid item>
+              <NavLink
+                to={'/reset-password'}
+                style={{ textDecoration: 'none', color: '#1976d2', fontSize: '14px' }}
+              >
+                Forgot Password?
+              </NavLink>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="text"
+                onClick={handleCreateNewAccount}
+                sx={{ textTransform: 'none', fontSize: '14px' }}
+              >
+                Create New Account
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Container>
+      <Box sx={{ marginTop: '50px' }}>
+        <FooterComponent1 />
+      </Box>
     </>
   );
 };

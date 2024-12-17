@@ -4,7 +4,7 @@ import AlertService from './alert/alertService';
 import { LoginComponent } from './components/login/LoginComponent';
 import { RegisterComponent } from './components/register/RegisterForm';
 import AdminLayout from './components/admin/layout/adminLayout';
-import { AdminDashboard } from './components/admin/adminDashboard';
+import { AdminDashboard } from './components/admin/dashboard/adminDashboard';
 import AdminAccountInfo from './components/admin/adminAccountInfo/adminAccountInfo';
 import { ChangePasswordComponent } from './components/changePassword/changePassword';
 import { ResetPassword } from './components/resetPassword/ResetPassword';

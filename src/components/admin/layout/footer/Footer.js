@@ -13,31 +13,30 @@ export const Footer = () => {
             }}
         >
             <Container maxWidth="lg">
-                <Grid container spacing={3} justifyContent="center">
-                    <Grid item>
-                        <Link href="#" underline="none" sx={{ color: '#555', fontWeight: 'bold', fontSize: '14px' }}>
-                            Features
-                        </Link>
-                    </Grid>
-                    <Grid item>
-                        <Link href="#" underline="none" sx={{ color: '#555', fontWeight: 'bold', fontSize: '14px' }}>
-                            Enterprise
-                        </Link>
-                    </Grid>
-                    <Grid item>
-                        <Link href="#" underline="none" sx={{ color: '#555', fontWeight: 'bold', fontSize: '14px' }}>
-                            Support
-                        </Link>
-                    </Grid>
-                    <Grid item>
-                        <Link href="#" underline="none" sx={{ color: '#555', fontWeight: 'bold', fontSize: '14px' }}>
-                            ICO
-                        </Link>
-                    </Grid>
+                <Grid container spacing={3} justifyContent={'center'} marginTop={3}>
+                    <Typography
+                        variant='h6'
+                        gutterBottom
+                        sx={{
+                            color: '#333',
+                            fontWeight: 'bold',
+                            textAlign: 'center'
+                        }}
+                    >
+                        CAPSTONE PROJECT OF IT3180 - INTRODUCTION TO SOFTWARE ENGINEERING
+                    </Typography>
                 </Grid>
-                <Grid container spacing = {3} justifyContent={'center'} marginTop={3}>
-                    <Typography variant='h6' gutterBottom sx={{color: '#555', fontWeight: 'bold'}}>
-                        Capstone Project of IT3180 - Introduction to Software Engineering
+                <Grid container spacing={2} justifyContent={'center'} marginTop={2}>
+                    <Typography
+                        variant='body1'
+                        gutterBottom
+                        sx={{
+                            color: '#555',
+                            fontWeight: 'bold',
+                            textAlign: 'center'
+                        }}
+                    >
+                        Group 21 - Admin UI
                     </Typography>
                 </Grid>
                 <Box
@@ -46,30 +45,28 @@ export const Footer = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         mt: 3,
-                        gap: 2
+                        gap: 3
                     }}
                 >
-                    <Link href="#" color="inherit">
-                        <Twitter sx={{ fontSize: '24px', color: '#555' }} />
+                    <Link href="#" target="_blank" rel="noopener">
+                        <Twitter sx={{ fontSize: '24px', color: '#1DA1F2', '&:hover': { color: '#0d8bec' } }} />
                     </Link>
-                    <Link href="#" color="inherit">
-                        <Facebook sx={{ fontSize: '24px', color: '#555' }} />
+                    <Link href="#" target="_blank" rel="noopener">
+                        <Facebook sx={{ fontSize: '24px', color: '#1877F2', '&:hover': { color: '#145dbf' } }} />
                     </Link>
-                    <Link href="#" color="inherit">
-                        <Instagram sx={{ fontSize: '24px', color: '#555' }} />
+                    <Link href="#" target="_blank" rel="noopener">
+                        <Instagram sx={{ fontSize: '24px', color: '#E1306C', '&:hover': { color: '#bc2a8d' } }} />
                     </Link>
-                    <Link href="#" color="inherit">
-                        <LinkedIn sx={{ fontSize: '24px', color: '#555' }} />
+                    <Link href="#" target="_blank" rel="noopener">
+                        <LinkedIn sx={{ fontSize: '24px', color: '#0A66C2', '&:hover': { color: '#004182' } }} />
                     </Link>
                 </Box>
-
                 <Typography
                     variant="body2"
-                    color="textSecondary"
                     align="center"
-                    sx={{ mt: 2, color: '#777' }}
+                    sx={{ mt: 3, color: '#777' }}
                 >
-                    © 2024 Pied Piper. All rights reserved.
+                    © 2024.1 - 154018 - All rights reserved
                 </Typography>
             </Container>
         </Box>

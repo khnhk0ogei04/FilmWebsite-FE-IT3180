@@ -14,8 +14,8 @@ export const SliderBanner = () => {
       title: "VENOM: THE LAST DANCE: KÈO CUỐI",
     },
     {
-      image: "",
-      title: ""
+      image: "https://www.bhdstar.vn/wp-content/uploads/2024/12/003_.jpg",
+      title: "MOANA 2: HÀNH TRÌNH CỦA MOANA"
     }
   ];
 
